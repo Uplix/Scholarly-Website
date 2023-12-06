@@ -1,6 +1,6 @@
 {
     "files.associations": {
-        "*.css": "tailwindcss"
+        "*.css": "tailwindcss",
     },
     "editor.tabSize": 4,
     "prettier.useTabs": false,
