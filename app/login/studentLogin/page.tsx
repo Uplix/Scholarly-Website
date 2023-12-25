@@ -2,12 +2,12 @@
 import Image from "next/image";
 import { auth, db, } from "@/firebase/config";
 import { onValue, ref } from "firebase/database";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import * as React from 'react'
-import { GoogleAuthProvider,onAuthStateChanged,signInWithCredential, signInWithCustomToken } from "firebase/auth";
-import Link from "next/link";
+import { GoogleAuthProvider,signInWithCredential } from "firebase/auth";
+// import Link from "next/link";
 import { useRouter } from "next/navigation";
-
+import { CircularProgress } from "@mui/material";
 
 // import authentication from "@/serverFunctions/authentication";
 
@@ -29,7 +29,7 @@ export default function StudentLogin(){
             }else{
                 setLoading(false);
             }
-        }, 500)
+        }, 1000)
     }, [])
 
     var signInEmail:null|string = null
@@ -61,7 +61,7 @@ export default function StudentLogin(){
                     setLoading(false);
                 }
                 
-            }, 250)
+            }, 1000)
         }catch(e){
             alert("Login failed: " + e + ". Please try again.");
             setLoading(false);
@@ -75,15 +75,15 @@ export default function StudentLogin(){
 
     const LoginButton = () =>{
         return(
-            <div className="flex h-1/3 justify-center">
-                <button disabled={loading} onClick={login} className="w-3/4">
+            <div>
+                <button disabled={loading} onClick={login} className="p-6 rounded-3xl hover:backdrop-brightness-110">
                     {loading? 
-                        <div className="animate-spin inline-block w-20 h-20 border-[5px] border-current border-t-transparent text-blue-600 rounded-full dark:text-blue-500">
-                            <span className="sr-only">Loading...</span>
-                        </div>:
-                        <text className="text-center text-6xl">
-                            Sign in with{" "}
-                            <text className="text-[#4285F4]">
+                        <CircularProgress size={100} thickness={2}/>:
+                        <div className="flex flex-col">
+                            <text className="text-center text-6xl text-white">
+                                Sign in with{" "}
+                            </text>
+                            <text className="text-[#4285F4] text-center text-6xl mt-4">
                                 G
                                 <text className="text-[#EA4336]">o</text>
                                 <text className="text-[#FBBC04]">o</text>
@@ -91,7 +91,7 @@ export default function StudentLogin(){
                                 <text className="text-[#34A853]">l</text>
                                 <text className="text-[#EA4336]">e</text>
                             </text>
-                        </text>
+                        </div>
                     }
                 </button>
                 {/* <button onClick={()=>logout()}>Sign Out</button> */}
@@ -109,7 +109,9 @@ export default function StudentLogin(){
                     <Image className="" alt="mhusd-logo" src={'/images/MHUSD_logo.webp'} width={175} height={175}/>
                 </div>
             </div>
-            <LoginButton />
+            <div className="flex h-1/3 justify-center p-16">
+                <LoginButton />
+            </div>
         </div>
     )
 }
