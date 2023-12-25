@@ -3,7 +3,8 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import Navbar from '@/components/navbar'
 import { AuthWrapper } from '@/components/authWrapper'
-
+import {theme} from '@/clientSide/theme'
+import { ThemeProvider } from '@mui/material'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
@@ -19,8 +20,10 @@ export default function RootLayout({
     return (
         <html lang='en'>
             <AuthWrapper>
-                {/* <Navbar /> */}
-                <body className={inter.className}>{children}</body>
+                <ThemeProvider theme={theme}>
+                    {/* <Navbar /> */}
+                    <body className={inter.className}>{children}</body>
+                </ThemeProvider>
             </AuthWrapper>
         </html>
     )
