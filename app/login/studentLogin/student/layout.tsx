@@ -48,9 +48,7 @@ export default function StudentLayout({
 
     return(
         <>
-            {menu?<TheMenu/>: null}
             <div className="flex flex-col h-screen w-screen">
-                
                 <div className="flex flex-row items-center h-20 w-screen bg-gradient-to-r from-slate-600 to-gray-400">
                     {!active? <button className='ml-8 transition ease-in-out hover:scale-110 hover:-translate-y-0.5' onClick={menuClick}>
                         <MenuIcon fontSize="large"/>
@@ -64,6 +62,7 @@ export default function StudentLayout({
                 </div>
                 <div>{children}</div>
             </div>
+            {menu?<TheMenu/>: null}
         </>
     )
 }
