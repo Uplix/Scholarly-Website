@@ -2,7 +2,7 @@
 import {auth} from '@/firebase/config'
 import { signOut } from 'firebase/auth'
 import { signOut as signOutReactAuth } from 'next-auth/react'
-export default async function Page() {
+export default function Page() {
     const signingOut = () =>{
         alert(auth.currentUser?.displayName);
         signOut(auth);
