@@ -5,7 +5,7 @@ import { onValue, ref, set } from "firebase/database"
 import CachedIcon from '@mui/icons-material/Cached';
 import CloseIcon from '@mui/icons-material/Close';
 
-var months = [null, 'Jan', 'Feb', 'Mar', 'Apr', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 export default function Page() {
     const [schedule, setSchedule]:any[] = React.useState([]);
@@ -22,6 +22,7 @@ export default function Page() {
         text:string,
         time:'',
         tutoree:string,
+        location:string
         // tutorer:null|{
         //     name:string,
         //     id:string
@@ -65,16 +66,16 @@ export default function Page() {
         }
 
         if(styling[i] == 'open')return(
-            <div className='relative flex h-96 transition hover:scale-105 hover:-translate-y-2'>
-                <button onClick={open} className='flex flex-row w-96 h-64 bg-[#1b1b1b] rounded-2xl absolute transition hover:scale-110 hover:-translate-y-4 left-0 top-0 animate-jump-out ease-out'>
+            <div className='relative flex h-fit transition hover:scale-105 hover:-translate-y-2'>
+                <button onClick={open} className='flex flex-row w-96 h-fit py-10 bg-[#1b1b1b] rounded-2xl absolute transition hover:scale-110 hover:-translate-y-4 left-0 top-0 animate-jump-out ease-out'>
                     <div className='flex flex-col'>
-                        <text className='text-left text-slate-50 text-4xl ml-6 mt-10'>{object.time}</text>
-                        <text className='text-left text-slate-50 text-4xl ml-6 mt-8'>{object.subject}</text>
-                        <text className='text-center text-slate-50 text-4xl ml-6 mt-8'>Grade Level:{' ' + object.grade}</text>
+                        <text className='text-left text-slate-50 text-4xl ml-6 mt-1'>{object.time}</text>
+                        <text className='text-left text-slate-50 text-4xl ml-6 mt-9'>{object.subject}</text>
+                        <text className='text-left text-slate-50 text-3xl ml-6 mt-5'>Location:{' ' + object.location}</text>
                     </div>
                     <div className='absolute right-4 top-4 flex flex-col justify-center items-center space-y-2 bg-emerald-700 p-3 rounded-xl'>
                         <text className='text-center text-3xl text-slate-50'>{months[date.getMonth()] + '. '}{date.getDate()}</text>
-                        <text className='text-center text-3xl text-slate-50'>2023</text>
+                        <text className='text-center text-3xl text-slate-50'>{date.getFullYear()}</text>
                     </div>
                 </button>
                 <div className='flex flex-col justify-center items-center w-96 h-fit bg-[#1c1c1c] rounded-2xl animate-jump-in animate-ease-in transition hover:scale-125 hover:-translate-y-1 pb-6'>
@@ -92,7 +93,9 @@ export default function Page() {
                     <text className='text-center text-3xl text-slate-50 mt-3'>{date.toDateString()}</text>
                     <div className='mt-1.5 bg-slate-800 opacity-50 h-0.5 w-full'/>
                     <text className='text-center text-3xl text-slate-50 mt-3'>{((object.hasOwnProperty('tutorer'))? ((object.tutorer.hasOwnProperty('name'))? object.tutorer.name:"No current tutor"):"No current tutor")}</text>
-                    <button className='text-center p-3 font-light rounded-2xl text-4xl mt-7 bg-rose-700 w-fit h-fit transition hover:scale-110 hover:-translate-y-2 hover:opacity-80'>Cancel</button>
+                    <div className='mt-1.5 bg-slate-800 opacity-50 h-0.5 w-full'/>
+                    <text className='text-center text-3xl text-slate-50 mt-3'>{object.text}</text>
+                    <button className='text-center p-3 font-light rounded-2xl text-4xl mt-7 bg-gradient-to-br from-rose-700 to-red-500 w-fit h-fit transition hover:scale-110 hover:-translate-y-2 hover:opacity-80'>Cancel</button>
                 </div>
             </div>
         )
@@ -114,17 +117,19 @@ export default function Page() {
                     <text className='text-center text-3xl text-slate-50 mt-3'>{date.toDateString()}</text>
                     <div className='mt-1.5 bg-slate-800 opacity-50 h-0.5 w-full'/>
                     <text className='text-center text-3xl text-slate-50 mt-3'>{((object.hasOwnProperty('tutorer'))? ((object.tutorer.hasOwnProperty('name'))? object.tutorer.name:"No current tutor"):"No current tutor")}</text>
-                    <button className='text-center p-3 font-light rounded-2xl text-4xl mt-7 bg-rose-700 w-fit h-fit transition hover:scale-110 hover:-translate-y-2 hover:opacity-80'>Cancel</button>
+                    <div className='mt-1.5 bg-slate-800 opacity-50 h-0.5 w-full'/>
+                    <text className='text-center text-3xl text-slate-50 mt-3'>{object.text}</text>
+                    <button className='text-center p-3 font-light rounded-2xl text-4xl mt-7 bg-gradient-to-br from-rose-700 to-red-500 w-fit h-fit transition hover:scale-110 hover:-translate-y-2 hover:opacity-80'>Cancel</button>
                 </div>
-                <button onClick={open} className='flex flex-row w-96 h-64 bg-[#1b1b1b] rounded-2xl absolute transition hover:scale-110 hover:-translate-y-4 left-0 top-0 animate-jump-in ease-in'>
+                <button onClick={open} className='flex flex-row w-96 h-fit py-10 bg-[#1b1b1b] rounded-2xl absolute transition hover:scale-110 hover:-translate-y-4 left-0 top-0 animate-jump-in ease-in'>
                     <div className='flex flex-col'>
-                        <text className='text-left text-slate-50 text-4xl ml-6 mt-10'>{object.time}</text>
-                        <text className='text-left text-slate-50 text-4xl ml-6 mt-8'>{object.subject}</text>
-                        <text className='text-center text-slate-50 text-4xl ml-6 mt-8'>Grade Level:{' ' + object.grade}</text>
+                        <text className='text-left text-slate-50 text-4xl ml-6 mt-1'>{object.time}</text>
+                        <text className='text-left text-slate-50 text-4xl ml-6 mt-9'>{object.subject}</text>
+                        <text className='text-left text-slate-50 text-3xl ml-6 mt-5'>Location:{' ' + object.location}</text>
                     </div>
                     <div className='absolute right-4 top-4 flex flex-col justify-center items-center space-y-2 bg-emerald-700 p-3 rounded-xl'>
                         <text className='text-center text-3xl text-slate-50'>{months[date.getMonth()] + '. '}{date.getDate()}</text>
-                        <text className='text-center text-3xl text-slate-50'>2023</text>
+                        <text className='text-center text-3xl text-slate-50'>{date.getFullYear()}</text>
                     </div>
                 </button>
             </div>
@@ -132,15 +137,15 @@ export default function Page() {
 
         return(
             <div className='transition hover:scale-105 hover:-translate-y-2'>
-                <button onClick={open} className='flex flex-row w-96 h-64 bg-[#1b1b1b] rounded-2xl relative animate-jump-in animate-ease-in'>
+                <button onClick={open} className='flex flex-row w-96 h-fit py-10 bg-[#1b1b1b] rounded-2xl relative animate-jump-in animate-ease-in'>
                     <div className='flex flex-col'>
-                        <text className='text-left text-slate-50 text-4xl ml-6 mt-10'>{object.time}</text>
-                        <text className='text-left text-slate-50 text-4xl ml-6 mt-8'>{object.subject}</text>
-                        <text className='text-center text-slate-50 text-4xl ml-6 mt-8'>Grade Level:{' ' + object.grade}</text>
+                        <text className='text-left text-slate-50 text-4xl ml-6 mt-1'>{object.time}</text>
+                        <text className='text-left text-slate-50 text-4xl ml-6 mt-9'>{object.subject}</text>
+                        <text className='text-left text-slate-50 text-3xl ml-6 mt-5'>Location:{' ' + object.location}</text>
                     </div>
                     <div className='absolute right-4 top-4 flex flex-col justify-center items-center space-y-2 bg-emerald-700 p-3 rounded-xl'>
-                        <text className='text-center text-3xl text-slate-50'>{months[date.getMonth()] + '. '}{date.getDate()}</text>
-                        <text className='text-center text-3xl text-slate-50'>2023</text>
+                        <text className='text-center text-3xl text-slate-50'>{months[date.getMonth()]+ '. '}{date.getDate()}</text>
+                        <text className='text-center text-3xl text-slate-50'>{date.getFullYear()}</text>
                     </div>
                 </button>
 
@@ -153,9 +158,10 @@ export default function Page() {
             <button onClick={()=>setRefresh(refresh+1)} className='self-end mt-6 mr-12 transition ease-in-out hover:scale-110 hover:-translate-y-2'>
                 <CachedIcon sx={{fontSize:55}}/>
             </button>
-            <div className='flex flex-wrap justify-center items-center space-x-20 space-y-12 w-full h-full pb-14'>
+            <div className='flex flex-wrap justify-center gap-x-20 gap-y-14 mx-10 h-full pb-14'>
                 {schedule.map((object:session, i:number)=>Tab(object, i))}
             </div>
+            {/* <div className='w-full h-28 bg-transparent'/> */}
         </div>
     )
 }
