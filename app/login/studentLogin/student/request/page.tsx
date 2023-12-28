@@ -300,9 +300,9 @@ export default function Page() {
                 <div className='animate-jump-in ease-in'>
                     <Timing />
                 </div>
-                <div className='animate-jump-in ease-in'>
+               {physcial?<div className='animate-jump-in ease-in'>
                     <Location />
-                </div>
+                </div>:null}
             </div>
             <div className='mt-10 animate-jump-in ease-in'>
                 <Dating />
