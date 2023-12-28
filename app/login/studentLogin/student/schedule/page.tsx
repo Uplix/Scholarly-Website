@@ -60,6 +60,7 @@ export default function Page() {
     React.useEffect(()=>{
         setTimeout(()=>setRefresh(refresh+1), 1000); 
     }, [])
+
     const Tab = (object:session, i:number) =>{
         var date = new Date(object.date);
 
@@ -84,7 +85,7 @@ export default function Page() {
                 <button onClick={open} className='flex flex-row w-96 h-fit py-10 bg-[#1b1b1b] rounded-2xl absolute transition hover:scale-110 hover:-translate-y-4 left-0 top-0 animate-jump-out ease-out'>
                     <div className='flex flex-col'>
                         <text className='text-left text-slate-50 text-4xl ml-6 mt-1'>{object.time}</text>
-                        <text className='text-left text-slate-50 text-4xl ml-6 mt-9'>{object.subject}</text>
+                        <text className='text-left text-slate-50 text-4xl ml-6 mt-7'>{object.subject}</text>
                         <text className='text-left text-slate-50 text-3xl ml-6 mt-5'>Location:{' ' + object.location}</text>
                     </div>
                     <div className='absolute right-4 top-4 flex flex-col justify-center items-center space-y-2 bg-emerald-700 p-3 rounded-xl'>
@@ -108,7 +109,7 @@ export default function Page() {
                     <div className='mt-1.5 bg-slate-800 opacity-50 h-0.5 w-full'/>
                     <text className='text-center text-3xl text-slate-50 mt-3'>{((object.hasOwnProperty('tutorer'))? ((object.tutorer.hasOwnProperty('name'))? object.tutorer.name:"No current tutor"):"No current tutor")}</text>
                     <div className='mt-1.5 bg-slate-800 opacity-50 h-0.5 w-full'/>
-                    <text className='text-center text-3xl text-slate-50 mt-3'>{object.text}</text>
+                    <text className='text-center text-3xl mx-3 text-slate-50 mt-3'>{object.text}</text>
                     <button onClick={pressed} className='text-center p-3 font-light rounded-2xl text-4xl mt-7 bg-gradient-to-br from-rose-700 to-red-500 w-fit h-fit transition hover:scale-110 hover:-translate-y-2 hover:opacity-80'>Cancel</button>
                 </div>
             </div>
@@ -132,13 +133,13 @@ export default function Page() {
                     <div className='mt-1.5 bg-slate-800 opacity-50 h-0.5 w-full'/>
                     <text className='text-center text-3xl text-slate-50 mt-3'>{((object.hasOwnProperty('tutorer'))? ((object.tutorer.hasOwnProperty('name'))? object.tutorer.name:"No current tutor"):"No current tutor")}</text>
                     <div className='mt-1.5 bg-slate-800 opacity-50 h-0.5 w-full'/>
-                    <text className='text-center text-3xl text-slate-50 mt-3'>{object.text}</text>
+                    <text className='text-center mx-3 text-3xl text-slate-50 mt-3'>{object.text}</text>
                     <button className='text-center p-3 font-light rounded-2xl text-4xl mt-7 bg-gradient-to-br from-rose-700 to-red-500 w-fit h-fit transition hover:scale-110 hover:-translate-y-2 hover:opacity-80'>Cancel</button>
                 </div>
                 <button onClick={open} className='flex flex-row w-96 h-fit py-10 bg-[#1b1b1b] rounded-2xl absolute transition hover:scale-110 hover:-translate-y-4 left-0 top-0 animate-jump-in ease-in'>
                     <div className='flex flex-col'>
                         <text className='text-left text-slate-50 text-4xl ml-6 mt-1'>{object.time}</text>
-                        <text className='text-left text-slate-50 text-4xl ml-6 mt-9'>{object.subject}</text>
+                        <text className='text-left text-slate-50 text-4xl ml-6 mt-7'>{object.subject}</text>
                         <text className='text-left text-slate-50 text-3xl ml-6 mt-5'>Location:{' ' + object.location}</text>
                     </div>
                     <div className='absolute right-4 top-4 flex flex-col justify-center items-center space-y-2 bg-emerald-700 p-3 rounded-xl'>
@@ -154,7 +155,7 @@ export default function Page() {
                 <button onClick={open} className='flex flex-row w-96 h-fit py-10 bg-[#1b1b1b] rounded-2xl relative animate-jump-in animate-ease-in'>
                     <div className='flex flex-col'>
                         <text className='text-left text-slate-50 text-4xl ml-6 mt-1'>{object.time}</text>
-                        <text className='text-left text-slate-50 text-4xl ml-6 mt-9'>{object.subject}</text>
+                        <text className='text-left text-slate-50 text-4xl ml-6 mt-7'>{object.subject}</text>
                         <text className='text-left text-slate-50 text-3xl ml-6 mt-5'>Location:{' ' + object.location}</text>
                     </div>
                     <div className='absolute right-4 top-4 flex flex-col justify-center items-center space-y-2 bg-emerald-700 p-3 rounded-xl'>
@@ -242,7 +243,7 @@ export default function Page() {
                 // onClick={()=>{setConfirmState('closing'); setTimeout(()=>setConfirmState('deactive'), 500)}} 
                 className='flex w-full h-full justify-center items-center'>
                     <div className='flex flex-col items-center justify-center pt-12 pb-6 gap-y-3 px-6 animate-duration-500 relative animate-jump-out ease-out h-fit w-96 bg-[#1e1e1e] rounded-2xl'>
-                        <text className='text-slate-50 text-4xl text-center'>Are you sure you want to cancel?</text>
+                        <text className='text-slate-50 text-4xl text-center'>Are you sure you want to cancel? This cannot be undone</text>
                         <text className='text-slate-50 text-3xl text-center mt-4'>Class:{" " + focused.subject}</text>
                         <text className='text-slate-50 text-3xl text-center'>{new Date(focused.date).toDateString()}</text>
                         <text className='text-slate-50 text-3xl text-center'>{focused.time}</text>
