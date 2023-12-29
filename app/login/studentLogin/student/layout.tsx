@@ -33,9 +33,21 @@ export default function StudentLayout({
     }
 
     
+        if(active){
+            setMenuClassName('absolute left-0 top-0 flex flex-col w-96 h-full bg-gradient-to-b from-emerald-500 to-indigo-400 animate-fade-right ease-out animate-alternate-reverse');
+            setActive(false);
+            setTimeout(()=>{
+                setMenu(false);
+                setMenuClassName('absolute left-0 top-0 flex flex-col w-96 h-full bg-gradient-to-b from-emerald-500 to-indigo-400 animate-fade-right ease-in')
+            }, 1000)   
+        }
+    }
+
+    
 
     const TheMenu = () =>{
         return(
+            // <Modal open={menu} onClose={closeMenu}>
             // <Modal open={menu} onClose={closeMenu}>
             <div className={menuClassName}>
                 <div className='flex flex-row w-full h-fit justify-end items-center mt-5'>
