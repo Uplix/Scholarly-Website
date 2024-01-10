@@ -16,19 +16,6 @@ const scopes =[
 
 ]
 
-const JWTSecret = String(process.env.NEXTAUTH_JWT_SECRET);
-const authorizationUrl = new URL("https://accounts.google.com/o/oauth2/v2/auth");
-authorizationUrl.searchParams.set("prompt", "consent");
-authorizationUrl.searchParams.set("access_type", "offline");
-authorizationUrl.searchParams.set("response_type", "code");
-
-const scopes =[
-    "https://www.googleapis.com/auth/userinfo.email",
-    "https://www.googleapis.com/auth/userinfo.profile",
-    "https://www.googleapis.com/auth/calendar.events"
-
-]
-
 const authOptions={
     providers:[
         GoogleProvider({

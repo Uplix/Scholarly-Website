@@ -8,6 +8,7 @@ import { GoogleAuthProvider,signInWithCredential } from "firebase/auth";
 // import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { CircularProgress } from "@mui/material";
+import { databaseLogin } from "@/clientSide/studentLoggedIn";
 
 // import authentication from "@/serverFunctions/authentication";
 
@@ -17,19 +18,21 @@ export default function StudentLogin(){
     const [loading, setLoading] = React.useState(true);
     const { data:session } = useSession();
     const router = useRouter();
+    const [currentSigningIn, setCurrentSigningIn] = React.useState(false);
     // onAuthStateChanged(auth, ()=>setUser(auth.currentUser));
 
-    console.log("reloaded, user variable =>", auth.currentUser?.displayName)
+    // console.log("reloaded, user variable =>", auth.currentUser?.displayName)
 
     React.useEffect(()=>{
         setLoading(true);
         setTimeout(()=>{
-            if(auth.currentUser?.displayName != null && auth.currentUser.displayName != undefined){
+            if(auth.currentUser?.displayName != null && auth.currentUser.displayName != undefined && !currentSigningIn){
                 router.push('/login/studentLogin/student');
+                console.log(auth.currentUser);
             }else{
                 setLoading(false);
             }
-        }, 1000)
+        }, 2000)
     }, [])
 
     var signInEmail:null|string = null
@@ -46,8 +49,11 @@ export default function StudentLogin(){
                     if(signInEmail != null){
                         await signIn('google');
                         if(session?.user?.email?.split('@')[1] == signInEmail){
+                            setCurrentSigningIn(true);
                             const credential = GoogleAuthProvider.credential(session?.id_token);
                             await signInWithCredential(auth, credential);
+                            await databaseLogin();
+                    
                             // setUser(true);
                             // alert(auth.currentUser?.email);
                        }else{
@@ -58,6 +64,7 @@ export default function StudentLogin(){
                     }
                 }catch(e){
                     alert("Login failed: " + e + ". ");
+                    setCurrentSigningIn(true);
                     setLoading(false);
                 }
                 
@@ -66,11 +73,6 @@ export default function StudentLogin(){
             alert("Login failed: " + e + ". Please try again.");
             setLoading(false);
         }
-    }
-
-    const logout = () =>{
-    //    signOut();
-        alert(auth.currentUser?.email)
     }
 
     const LoginButton = () =>{
