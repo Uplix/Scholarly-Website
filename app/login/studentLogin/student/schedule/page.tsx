@@ -5,7 +5,7 @@ import { onValue, ref, set, remove } from "firebase/database"
 import CachedIcon from '@mui/icons-material/Cached';
 import CloseIcon from '@mui/icons-material/Close';
 import { Modal, CircularProgress} from '@mui/material';
-
+import { session } from '@/clientSide/interfaces';
 
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const now = new Date();
@@ -17,24 +17,6 @@ export default function Page() {
     const [confirmState, setConfirmState] = React.useState('deactive');
     const [focused, setFocused]:session|null = React.useState(null);
     const [cancelLoad, setCancelLoad] = React.useState(false);
-
-    interface session{
-        available:boolean,
-        date:number,
-        email:string,
-        grade:number,
-        name:string,
-        subject:string,
-        text:string,
-        time:string,
-        tutoree:string,
-        location:string,
-        key:string
-        // tutorer:null|{
-        //     name:string,
-        //     id:string
-        // }
-    }
 
     React.useEffect(()=>{
         var theSchedule: any[] = [];

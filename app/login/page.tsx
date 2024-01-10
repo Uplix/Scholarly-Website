@@ -8,7 +8,7 @@ export default function Home() {
                 <Link href={"/login/studentLogin"}>
                     <h2 className='bg-gradient-to-br from-fuchsia-600 from-20% to-red-400 to-80% text-md p-2 rounded-xl hover:p-4 hover:text-xl transition-all'>Go to Student View</h2>
                 </Link>
-                <Link href={"/loggedin/staffLogin"}>
+                <Link href={"/login/staffLogin"}>
                     <h2 className='bg-gradient-to-br from-fuchsia-600 from-20% to-red-400 to-80% text-md p-2 rounded-xl hover:p-4 hover:text-xl transition-all'>Go to Staff View</h2>
                 </Link>
             </div>
