@@ -32,6 +32,12 @@ export default function UpcomingSessions(){
 
         setSchedule(theSchedule);
         setStyling(theStyling);
+    }, [refresh])
+
+    React.useEffect(()=>{
+        setTimeout(()=>{
+            setRefresh(refresh+1);
+        }, 700)
     }, [])
 
     const Tab = (object:session, i:number) =>{

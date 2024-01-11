@@ -27,7 +27,7 @@ export default function StudentLogin(){
         setLoading(true);
         setTimeout(()=>{
             if(auth.currentUser?.displayName != null && auth.currentUser.displayName != undefined && !currentSigningIn){
-                router.push('/login/studentLogin/student');
+                router.push('/login/studentLogin/student/schedule');
                 console.log(auth.currentUser);
             }else{
                 setLoading(false);
@@ -52,7 +52,7 @@ export default function StudentLogin(){
                             setCurrentSigningIn(true);
                             const credential = GoogleAuthProvider.credential(session?.id_token);
                             await signInWithCredential(auth, credential);
-                            await databaseLogin();
+                            // await databaseLogin();
                     
                             // setUser(true);
                             // alert(auth.currentUser?.email);
