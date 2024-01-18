@@ -9,7 +9,7 @@ import CloseIcon from '@mui/icons-material/Close'
 import * as React from 'react'
 import Modal from "@mui/material/Modal";
 import Rating from '@mui/material/Rating'
-import { CircularProgress } from "@mui/material";
+import { CircularProgress, Backdrop } from "@mui/material";
 import { useRouter } from "next/navigation";
 
 export default function Settings(){
@@ -22,6 +22,7 @@ export default function Settings(){
         numRatings:0,
         rating:0
     });
+    const [loading, setLoading] = React.useState(false)
     const router = useRouter();
 
     interface suresees{
@@ -71,12 +72,16 @@ export default function Settings(){
             <CircularProgress size={100} thickness={2}/>
         </div>
     )
+    if(auth.currentUser == undefined ||auth.currentUser == null){
+        router.push('/')
+    }
     
     const signingOut = async () =>{
+        setLoading(true)
         await signOut(auth);
         // setReload(reload+1);
-        await signingOut();
-        closeModal();
+        await fullSignOut();
+        // closeModal();
         router.push('/login');
     }
 
@@ -95,7 +100,7 @@ export default function Settings(){
 
     return(
         <div className="flex flex-col w-full h-full items-center mt-16">
-            <div className="scale-150 rounded-full border-2 border-slate-100 w-fit h-fit animate-jump-in animate-ease-in">
+            <div className="scale-200 rounded-full w-fit h-fit animate-jump-in animate-ease-in">
                 {(auth.currentUser == null || auth.currentUser == undefined)? <PersonIcon fontSize='large'/>:<Avatar alt={"Profile Image"} src={auth.currentUser.photoURL}/>}
             </div>
             <text className="text-slate-50 text-5xl text-center w-fit h-fit mt-8 mb-10 animate-jump-in animate-ease-in">Hi{" "+auth.currentUser?.displayName?.split(' ')[0] + " 👋"}</text>
@@ -122,6 +127,9 @@ export default function Settings(){
                     </div>
                 </div>
             </Modal>:null}
+            {loading?<Backdrop open={loading}>
+                <CircularProgress size={120} thickness={1.5}/>
+            </Backdrop>:null}
         </div>
     )
 }
