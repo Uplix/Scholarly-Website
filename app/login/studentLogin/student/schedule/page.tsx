@@ -21,22 +21,30 @@ export default function Page() {
     React.useEffect(()=>{
         var theSchedule: any[] = [];
         var theStyling: string[] = [];
+        console.log(refresh)
+        console.log(auth.currentUser?.uid)
         // setTimeout(()=>{
-            onValue(ref(db, 'mhusd/schedule/' + auth.currentUser?.uid), (snapshot)=>{
-                snapshot.forEach((child)=>{
-                    // var aChild:session = child.toJSON();
-                    // aChild.design = "flex flex-row w-96 h-64 bg-[#1b1b1b] rounded-2xl relative transition hover:scale-110 hover:-translate-y-4"
-                    var theJSON:any = child.toJSON();
-                    theJSON.key = child.key;
-                    theSchedule.push(theJSON);
-                    // theStyling.push('flex flex-row w-96 h-64 bg-[#1b1b1b] rounded-2xl relative transition hover:scale-110 hover:-translate-y-4');
-                    // console.log("child:", child.toJSON())
-                    theStyling.push('regular')
-                })
+        onValue(ref(db, 'mhusd/schedule/' + auth.currentUser?.uid), (snapshot)=>{
+            // console.log(snapshot.val())
+            snapshot.forEach((child)=>{
+                // var aChild:session = child.toJSON();
+                // aChild.design = "flex flex-row w-96 h-64 bg-[#1b1b1b] rounded-2xl relative transition hover:scale-110 hover:-translate-y-4"
+                var theJSON:any = child.toJSON();
+                theJSON.key = child.key;
+                // console.log(theJSON)
+                theSchedule.push(theJSON);
+                // theStyling.push('flex flex-row w-96 h-64 bg-[#1b1b1b] rounded-2xl relative transition hover:scale-110 hover:-translate-y-4');
+                // console.log("child:", child.toJSON())
+                theStyling.push('regular')
+                console.log(theSchedule)
             })
+        })
         // }, 1000)
-        setStyling(theStyling);
-        setSchedule(theSchedule);
+        console.log(theStyling)
+        setTimeout(()=>setSchedule(theSchedule), 100)
+        setTimeout(()=>setStyling(theStyling), 100)
+        // setStyling(theStyling);
+        // setSchedule(theSchedule);
         // console.log(theSchedule)
     }, [refresh])
     React.useEffect(()=>{

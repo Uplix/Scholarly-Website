@@ -8,11 +8,17 @@ import { GoogleAuthProvider,signInWithCredential } from "firebase/auth";
 // import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { CircularProgress } from "@mui/material";
-import { databaseLogin } from "@/clientSide/studentLoggedIn";
+// import { databaseLogin } from "@/clientSide/studentLoggedIn";
 
 // import authentication from "@/serverFunctions/authentication";
 
 // import { useRouter } from "next/navigation";
+
+function delay(delay: number) {
+    return new Promise(r => {
+        setTimeout(r, delay);
+    })
+}
 
 export default function StudentLogin(){
     const [loading, setLoading] = React.useState(true);
@@ -27,8 +33,8 @@ export default function StudentLogin(){
         setLoading(true);
         setTimeout(()=>{
             if(auth.currentUser?.displayName != null && auth.currentUser.displayName != undefined && !currentSigningIn){
-                router.push('/login/studentLogin/student/schedule');
-                console.log(auth.currentUser);
+                router.push('/login/studentLogin/student');
+                // console.log(auth.currentUser);
             }else{
                 setLoading(false);
             }
@@ -41,36 +47,28 @@ export default function StudentLogin(){
         signInEmail = snapshot.val();
         // console.log("The sign in email: " + signInEmail)
     })
-    const login = ()=>{
+    const login = async ()=>{
+        setLoading(true);
+        await delay(1000);
         try{
-            setLoading(true);
-            setTimeout(async ()=>{
-                try{
-                    if(signInEmail != null){
-                        await signIn('google');
-                        if(session?.user?.email?.split('@')[1] == signInEmail){
-                            setCurrentSigningIn(true);
-                            const credential = GoogleAuthProvider.credential(session?.id_token);
-                            await signInWithCredential(auth, credential);
-                            // await databaseLogin();
-                    
-                            // setUser(true);
-                            // alert(auth.currentUser?.email);
-                       }else{
-                            throw new Error("Please use your school Google account to login ending in " + signInEmail +". Your email: " + session?.user?.email);
-                       }
-                    }else{
-                        throw new Error("Couldn't fetch from server");
-                    }
-                }catch(e){
-                    alert("Login failed: " + e + ". ");
+            if(signInEmail != null){
+                await signIn('google');
+                if(session?.user?.email?.split('@')[1] == signInEmail){
                     setCurrentSigningIn(true);
-                    setLoading(false);
+                    const credential = GoogleAuthProvider.credential(session?.id_token);
+                    await signInWithCredential(auth, credential);
+                    // await databaseLogin();
+                    // setUser(true);
+                    // alert(auth.currentUser?.email);
+                }else{
+                    throw new Error("Please use your school Google account to login ending in " + signInEmail +". Your email: " + session?.user?.email);
                 }
-                
-            }, 1000)
+            }else{
+                throw new Error("Couldn't fetch from server");
+            }
         }catch(e){
-            alert("Login failed: " + e + ". Please try again.");
+            alert("Login failed: " + e + ". ");
+            setCurrentSigningIn(true);
             setLoading(false);
         }
     }
@@ -83,7 +81,7 @@ export default function StudentLogin(){
                         <CircularProgress size={100} thickness={2}/>:
                         <div className="flex flex-col">
                             <text className="text-center text-6xl text-white">
-                                Sign in with{" "}
+                                Login in with{" "}
                             </text>
                             <text className="text-[#4285F4] text-center text-6xl mt-4">
                                 G

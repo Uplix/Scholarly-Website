@@ -5,6 +5,8 @@ import Navbar from '@/components/navbar'
 import { AuthWrapper } from '@/components/authWrapper'
 import {theme} from '@/clientSide/theme'
 import { ThemeProvider } from '@mui/material'
+
+
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {

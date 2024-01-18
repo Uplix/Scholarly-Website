@@ -6,7 +6,8 @@ import PersonIcon from '@mui/icons-material/Person';
 import MenuIcon from '@mui/icons-material/Menu';
 import Link from "next/link";
 import CloseIcon from '@mui/icons-material/Close';
-import { ref, onValue } from 'firebase/database';
+import { ref, onValue, set } from 'firebase/database';
+
 // import Modal from '@mui/material/Modal';
 
 export default function StudentLayout({
@@ -37,13 +38,37 @@ export default function StudentLayout({
     }
 
     React.useEffect(()=>{
-        onValue(ref(db, 'mhusd/users/' + auth.currentUser?.uid + '/isTutor'), (snapshot)=>{
-            if(snapshot.exists()){
-                setIsTutor(snapshot.val())
-            }
-        })
+        if(reload == 1){
+            onValue(ref(db, 'mhusd/users/' + auth.currentUser?.uid + '/isTutor'), (snapshot)=>{
+                if(snapshot.exists()){
+                    setIsTutor(snapshot.val())
+                }
+            })
+        }
     }, [reload])
+
+    // React.useEffect(()=>{
+    //     onValue(ref(db, 'mhusd/users/' + auth.currentUser?.uid + '/name'), (snapshot)=>{
+    //         setter(snapshot.exists());
+    //     })
+    // }, [reload])
     
+    // const setter = (exists:boolean)=>{
+    //     if(exists != null && auth.currentUser?.displayName != undefined && auth.currentUser.displayName != null){
+    //         if(exists == false){
+    //             set(ref(db, 'mhusd/users/' + auth.currentUser?.uid + '/name'), auth.currentUser?.displayName)
+    //             set(ref(db, 'mhusd/users/' + auth.currentUser?.uid + '/district'), auth.currentUser.email?.split('@')[1].split('.')[0])
+    //             // done = true;
+    //             console.log(exists)
+    //             // return;
+    //         }else{
+    //             // done = true; 
+    //             console.log(exists)
+    //             // return;
+    //         }
+    //     }
+    // }
+
     React.useEffect(()=>{
         setTimeout(()=>{
             setReload(reload+1)

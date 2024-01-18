@@ -1,6 +1,6 @@
 'use client'
 import * as React from 'react'
-import { Avatar } from "@mui/material";
+import { Avatar, CircularProgress } from "@mui/material";
 import {auth} from '@/firebase/config'
 import PersonIcon from '@mui/icons-material/Person';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -12,10 +12,16 @@ export default function StudentLayout({
 }: {
     children: React.ReactNode
 }){
-    auth.currentUser
+    const [loadingAvatar, setLoadingAvatar] = React.useState(true);
     const [menu, setMenu] = React.useState(false);
     const [menuClassName, setMenuClassName] = React.useState('absolute left-0 top-0 flex flex-col w-96 h-full bg-gradient-to-b from-emerald-500 to-indigo-400 animate-fade-right ease-in');
     const [active, setActive] = React.useState(menu);
+
+    React.useEffect(()=>{
+        setTimeout(()=>{
+            setLoadingAvatar(false);
+        }, 700)
+    }, [])
 
     const menuClick = () =>{
         setMenu(true);
@@ -61,9 +67,13 @@ export default function StudentLayout({
                     </button>: null}
                     <div className="flex-grow"/>
                     {/* <Link href={'/login/studentLogin/student/settings'} className="mr-12 text-4xl transition delay-150 hover:-translate-y-1 hover:scale-110">Settings</Link> */}
+                    {loadingAvatar?
+                    <div className='mr-12'>
+                        <CircularProgress />
+                    </div>:
                     <div className="scale-125 rounded-full mr-12 border-2 border-slate-100">
                         <Avatar sx={{bgcolor:stringToColor(auth.currentUser?.displayName)}}>{(auth.currentUser == null || auth.currentUser == undefined)?'NA':auth.currentUser?.displayName?.charAt(0) + auth.currentUser?.displayName?.split(' ')[1].charAt(0)}</Avatar>
-                    </div>
+                    </div>}
                 </div>
                 <div>{children}</div>
             </div>
@@ -86,7 +96,7 @@ function stringToColor(string:string|null|undefined) {
             color += `00${value.toString(16)}`.slice(-2);
         }
     }else{
-        color = '#1b1b1b'
+        color = '#f1f1f1'
     }
     /* eslint-disable no-bitwise */
    

@@ -96,10 +96,8 @@ export default function Options(){
                     <text className='text-4xl'>Subjects</text>
                     <div className='pl-8 pr-5 mt-3 overflow-auto rounded-lg bg-gradient-to-br from-sky-400 to-sky-700 bg-opacity-60 mix-blend-lighten'>
                         <div className='flex flex-col items-center w-56 max-h-96'>
-                            <div className='flex flex-col min-w-full min-h-full'>
-                                <div className='flex flex-row justify-end w-full max-h-3'>
-                                    <Link href={'/login/staffLogin/staff/options/subjects'} className='mr-5 mt-5 transition delay-150 hover:scale-110 hover:-translate-y-1'><EditIcon fontSize='large'/></Link>
-                                </div>
+                            <div className='flex flex-col min-w-full min-h-full relative'>
+                                
                                 <div className='scale-150 h-max w-max'>
                                     <Container sx={{maxHeight:300}}>
                                         <Box sx={{ minHeight: 300, flexGrow: 1, maxWidth: 300, mt:12}}>
@@ -113,6 +111,9 @@ export default function Options(){
                                         </Box>
                                     </Container>
                                 </div>
+                                {/* <div className='flex flex-row justify-end w-full max-h-3'> */}
+                                    <Link href={'/login/staffLogin/staff/options/subjects'} className='absolute top-4 right-4 transition delay-150 hover:scale-110 hover:-translate-y-1'><EditIcon fontSize='large'/></Link>
+                                {/* </div> */}
                             </div>
                         </div>
                     </div>
@@ -121,10 +122,10 @@ export default function Options(){
                     <text className='text-4xl'>Times</text>
                     <div className='pl-8 pr-5 mt-3 overflow-auto rounded-lg bg-gradient-to-br from-emerald-400 to-emerald-700 bg-opacity-60 mix-blend-lighten'>
                         <div className='flex flex-col items-center w-56 max-h-96'>
-                            <div className='flex flex-col min-w-full min-h-full'>
-                                <div className='flex flex-row justify-end w-full max-h-3'>
+                            <div className='flex flex-col min-w-full min-h-full relative'>
+                                {/* <div className='flex flex-row justify-end w-full max-h-3'>
                                     <Link href={'/login/staffLogin/staff/options/subjects'} className='mr-5 mt-5 transition delay-150 hover:scale-110 hover:-translate-y-1'><EditIcon fontSize='large'/></Link>
-                                </div>
+                                </div> */}
                                 <div className='scale-150 h-max w-max'>
                                     <Container sx={{maxHeight:300}}>
                                         <Box sx={{ minHeight: 300, flexGrow: 1, maxWidth: 300, mt:12}}>
@@ -136,13 +137,14 @@ export default function Options(){
                                                 <TreeItem nodeId='virtual' label='Virtual'>
                                                     {times.virtual.map((timed:string)=>(<TreeItem nodeId={'virtual' + timed} label={timed} />))}
                                                 </TreeItem>
-                                                <TreeItem nodeId='physcial' label='Physcial'>
-                                                    {times.physical.map((timed:string)=>(<TreeItem nodeId={'physcial' + timed} label={timed} />))}
+                                                <TreeItem nodeId='physical' label='Physical'>
+                                                    {times.physical.map((timed:string)=>(<TreeItem nodeId={'physical' + timed} label={timed} />))}
                                                 </TreeItem>
                                             </TreeView>
                                         </Box>
                                     </Container>
                                 </div>
+                                <Link href={'/login/staffLogin/staff/options/times'} className='absolute top-4 right-4 transition delay-150 hover:scale-110 hover:-translate-y-1'><EditIcon fontSize='large'/></Link>
                             </div>
                         </div>
                     </div>
@@ -169,7 +171,7 @@ export default function Options(){
                     </div>
                 </div>
                 <div className='flex flex-row justify-end w-full max-h-3 absolute top-9 right-6'>
-                    <Link href={'/login/staffLogin/staff/options/grades'} className='mr-5 mt-5 transition delay-150 hover:scale-110 hover:-translate-y-1'><EditIcon fontSize='large'/></Link>
+                    {/* <Link href={'/login/staffLogin/staff/options/grades'} className='mr-5 mt-5 transition delay-150 hover:scale-110 hover:-translate-y-1'><EditIcon fontSize='large'/></Link> */}
                 </div>
             </div>
         </div>
