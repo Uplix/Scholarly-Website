@@ -2,26 +2,39 @@
 import Link from 'next/link'
 import {auth} from '@/firebase/config'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
+import StudentIcon from '@/components/studentdesk.svg'
+import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
+import ChildCareIcon from '@mui/icons-material/ChildCare';
 
 export default function Home() {
     const router = useRouter();
 
+    const studentLogin = () =>{
+        if(auth.currentUser != undefined && auth.currentUser != null){
+            router.push('/login/studentLogin/student/schedule');
+        }else{
+            router.push('/login/studentLogin')
+        }
+    }
+
+    const staffLogin = () =>{
+        router.push('/login/staffLogin');
+    }
+
     return (
-        <main className='flex min-h-screen flex-col items-center space-y-8 p-24'>
-            <h1 className='bg-gradient-to-br from-indigo-500 from-20% via-sky-500 via-40% to-emerald-500 text-2xl px-4 py-3 rounded-xl'>This is the <strong>Main</strong> Page</h1>
-            <div className='flex flex-col space-y-2'>
-                <button onClick={()=>{
-                    if(auth.currentUser != undefined && auth.currentUser != null){
-                        router.push('/login/studentLogin/student/schedule');
-                    }else{
-                        router.push('/login/studentLogin')
-                    }
-                }}>
-                    <h2 className='bg-gradient-to-br from-fuchsia-600 from-20% to-red-400 to-80% text-md p-2 rounded-xl hover:p-4 hover:text-xl transition-all'>Go to Student View</h2>
+        <main className='flex min-h-screen flex-col items-center justify-center w-screen py-5'>
+            <h2 className='text-7xl font-semibold text-center'>Sign In</h2>
+            <h5 className='text-4xl text-center mt-7 max-w-xl px-8'>What kind of account do you want to login to?</h5>
+            <div className='flex flex-row flex-wrap items-center justify-center gap-x-16 gap-y-10 mt-12 px-8'>
+                <button onClick={studentLogin} className='bg-gradient-to-br transition from-indigo-500 from-15% via-sky-500 via-40% to-emerald-500 hover:scale-110 w-48 h-64 rounded-lg flex flex-col items-center justify-end'>
+                    <Image className='mb-8 scale-125' alt='Student Icon' src={StudentIcon} width={55} height={55}/>
+                    <h4 className='text-4xl font-semibold mb-14'>Student</h4>
                 </button>
-                <Link href={"/login/staffLogin"}>
-                    <h2 className='bg-gradient-to-br from-fuchsia-600 from-20% to-red-400 to-80% text-md p-2 rounded-xl hover:p-4 hover:text-xl transition-all'>Go to Staff View</h2>
-                </Link>
+                <button onClick={staffLogin} className='bg-gradient-to-bl transition from-indigo-500 from-15% via-sky-500 via-40% to-emerald-500 hover:scale-110 w-48 h-64 rounded-lg flex flex-col items-center justify-end'>
+                    <SupervisorAccountIcon className='mb-1.5' sx={{fontSize:110}} />
+                    <h4 className='text-4xl font-semibold mb-14'>Staff</h4>
+                </button>
             </div>
         </main>
     )
