@@ -7,6 +7,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Link from "next/link";
 import CloseIcon from '@mui/icons-material/Close';
 import { ref, onValue, set } from 'firebase/database';
+import Modal from '@mui/material/Modal';
 
 // import Modal from '@mui/material/Modal';
 
@@ -85,8 +86,8 @@ export default function StudentLayout({
                         <CloseIcon fontSize='large' className='mr-6'/>
                     </button>
                 </div>
-                <Link href={'/'} className='flex justify-center items-center self-center mt-4 w-fit transition ease-in-out delay-150 text-6xl text-teal-200 text-center hover:-translate-y-2 hover:scale-110  decoration-sky-500 underline-offset-8 hover:underline'>Scholarly</Link>
-                <div className='mt-7 h-0.5 w-full bg-slate-50'></div>
+                <Link href={'/'} className='self-center pb-3 mt-2 w-fit transition ease-in-out delay-150  text-7xl text-transparent bg-clip-text font-sans font-medium bg-gradient-to-r from-sky-200 to-violet-300 text-center hover:-translate-y-2 hover:scale-110  decoration-sky-500 underline-offset-8 hover:underline'>Scholarly</Link>
+                <div className='mt-4 h-0.5 w-full bg-slate-50'></div>
                 {isTutor?<Link href={'/login/studentLogin/student/available'} onClick={()=>{setTimeout(()=>closeMenu(),50)}} className='self-center text-center text-white text-5xl mt-16 transition ease-in-out delay-150 hover:scale-110 hover:-translate-y-1'>Available</Link>:null}
                 <Link href={'/login/studentLogin/student/request'} onClick={()=>{setTimeout(()=>closeMenu(),50)}} className='self-center text-center text-white text-5xl mt-16 transition ease-in-out delay-150 hover:scale-110 hover:-translate-y-1'>Request</Link>
                 <Link href={'/login/studentLogin/student/schedule'} onClick={()=>{setTimeout(()=>closeMenu(),50)}} className='self-center text-center text-white text-5xl mt-16 transition ease-in-out delay-150 hover:scale-110 hover:-translate-y-1'>Schedule</Link>
@@ -109,9 +110,13 @@ export default function StudentLayout({
                         {/*  */}
                     </div>
                 </div>
-                <div>{children}</div>
+                {children}
             </div>
-            {menu?<TheMenu/>: null}
+            <Modal open={menu} onClose={closeMenu}>
+                <div className='w-fit h-fit'>
+                    {menu?<TheMenu/>: null}
+                </div>
+            </Modal>
         </>
     )
 }
