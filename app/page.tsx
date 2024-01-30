@@ -202,9 +202,9 @@ export default function Home() {
                 Peer Tutor Accepts
               </AccordionSummary>
               <AccordionDetails sx={{ textAlign: "center", fontSize: 18 }}>
-                Your district&apos;s verified peer tutors can see the request and
-                choose to accept it if they are confident in that subject and
-                are available at that date/time.
+                Your district&apos;s verified peer tutors can see the request
+                and choose to accept it if they are confident in that subject
+                and are available at that date/time.
               </AccordionDetails>
             </Accordion>
           </div>

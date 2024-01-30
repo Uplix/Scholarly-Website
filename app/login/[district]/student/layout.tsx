@@ -1,12 +1,7 @@
 "use client";
 import * as React from "react";
 import Image from "next/image";
-import {
-  Avatar,
-  CircularProgress,
-  Collapse,
-  Dialog,
-} from "@mui/material";
+import { Avatar, CircularProgress, Collapse, Dialog } from "@mui/material";
 import { auth, db } from "@/firebase/config";
 import PersonIcon from "@mui/icons-material/Person";
 import MenuIcon from "@mui/icons-material/Menu";

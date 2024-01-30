@@ -27,9 +27,9 @@ const now = new Date();
 export default function Page({ params }: { params: { district: string } }) {
   const [schedule, setSchedule]: any[] = React.useState([]);
   const [refresh, setRefresh] = React.useState(0);
-  const [styling, setStyling]:any[] = React.useState([]);
-  const [confirmState, setConfirmState] = React.useState('deactive');
-  const [focused, setFocused]:session|null = React.useState(null);
+  const [styling, setStyling]: any[] = React.useState([]);
+  const [confirmState, setConfirmState] = React.useState("deactive");
+  const [focused, setFocused]: session | null = React.useState(null);
   const [cancelLoad, setCancelLoad] = React.useState(false);
   const [cancelDialog, setCancelDialog] = React.useState(false);
 

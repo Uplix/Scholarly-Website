@@ -90,11 +90,9 @@ export default function StaffLogin() {
                     login();
                   }
                 }}
-
                 inputRef={(input) => {
                   setPasswordInput(input);
                 }}
-                
                 onChange={(event) => setPassword(event.target.value)}
                 error={error}
                 id="password-input"
