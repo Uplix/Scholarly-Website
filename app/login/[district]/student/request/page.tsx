@@ -7,7 +7,7 @@ import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { db, auth } from '@/firebase/config';
 import { onValue, ref, set, push } from 'firebase/database';
-import { FormHelperText } from '@mui/material';
+import { Dialog, FormHelperText } from '@mui/material';
 import { DateCalendar } from '@mui/x-date-pickers';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import {DemoContainer} from '@mui/x-date-pickers/internals/demo'
@@ -15,11 +15,13 @@ import {AdapterMoment} from '@mui/x-date-pickers/AdapterMoment'
 import {TextField} from '@mui/material';
 import Box from '@mui/material/Box';
 import {useRouter} from 'next/navigation';
+import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
+import Link from 'next/link';
 
 var moment = require('moment');
 moment().format();
 
-export default function Page() {
+export default function Page({params}:{params:{district:string}}) {
     const [reload, setReload] = React.useState(0);
     const [selectedSub, setSelectedSub]:any = React.useState("");
     const [requestSub, setRequestSub]:any[] = React.useState([]);
@@ -38,6 +40,7 @@ export default function Page() {
     const [locationError, setLocationError] = React.useState(false);
     const [textError, setTextError] = React.useState('good');
     const [current, setCurrent]:any = React.useState(undefined);
+    const [requestSent, setRequestSent] = React.useState(false)
     const router = useRouter();
 
     React.useEffect(()=>{
@@ -48,7 +51,7 @@ export default function Page() {
         }
         var theRequestGrade:any[] = [];
         var theRequestLocation:any[] = [];
-        onValue(ref(db, "mhusd/requestInfo/"), (snapshot)=>{
+        onValue(ref(db, params.district + "/requestInfo/"), (snapshot)=>{
             snapshot.child('subjects').forEach((child)=>{
                 theRequestSub.push({
                     subj:child.key,
@@ -65,7 +68,7 @@ export default function Page() {
             theRequestLocation = snapshot.child('locations').val().split(',');
         })
         var currentDates:any[] = [];
-        onValue(ref(db, 'mhusd/schedule/' + auth.currentUser?.uid), (snapshot)=>{
+        onValue(ref(db, params.district + '/schedule/' + auth.currentUser?.uid), (snapshot)=>{
             snapshot.forEach((child)=>{
                 currentDates.push(child.child('date').val())
             })
@@ -244,7 +247,7 @@ export default function Page() {
                 alert("You already have a session on this day. Try changing the date.");
             }else{
                 try{
-                    var pushRef = push(ref(db, 'mhusd/sessions/' + auth.currentUser?.uid))
+                    var pushRef = push(ref(db, params.district + '/sessions/' + auth.currentUser?.uid))
                     set(pushRef, {
                         name:auth.currentUser?.displayName,
                         subject:selectedSub,
@@ -257,7 +260,7 @@ export default function Page() {
                         available:true,
                         tutoree:auth.currentUser?.uid
                     })
-                    set(ref(db, 'mhusd/schedule/' + auth.currentUser?.uid + '/' + pushRef.key), {
+                    set(ref(db, params.district + '/schedule/' + auth.currentUser?.uid + '/' + pushRef.key), {
                         name:auth.currentUser?.displayName,
                         subject:selectedSub,
                         grade:selectedGrade,
@@ -269,6 +272,7 @@ export default function Page() {
                         available:true,
                         tutoree:auth.currentUser?.uid
                     })
+                    setRequestSent(true)
                 }catch(e){
                     alert("An error occured while adding to database: " + e)
                 }
@@ -276,8 +280,8 @@ export default function Page() {
                 setSelectedTime('')
                 setText('')
                 setDate(moment().add(2, 'days'))
-                alert("Scheduled")
-                router.push('/login/studentLogin/student/schedule');
+                // alert("Scheduled")
+                // router.push('/login/'+params.district +'/student/schedule');
             }
         }else{
             alert("You left one or more prompts blank")
@@ -286,7 +290,7 @@ export default function Page() {
     }
 
     return(
-        <div className='w-full h-full pb-20 flex flex-col justify-center items-center'>
+        <div className='w-full h-fit pb-6 flex flex-col justify-center items-center'>
             <text className='text-slate-50 text-6xl mt-6 text-center font-light font-sans'>Request Help</text>
             <div className='flex flex-wrap flex-row gap-x-20 gap-y-10 justify-center mt-11 mx-20'>
                 <div className='animate-jump-in ease-in'>
@@ -319,6 +323,16 @@ export default function Page() {
                 />
             </div>
             <button onClick={submit} className='text-center text-4xl text-slate-50 mt-10 px-3 py-2 bg-gradient-to-br from-emerald-800 to-green-400 rounded-xl transition hover:scale-110 hover:-translate-y-2 hover:opacity-80'>Submit</button>
+            <Dialog open={requestSent}>
+                <div className='w-fit h-fit bg-[#121820] py-9 px-9 flex flex-col items-center'>
+                    <div className='w-fit h-fit p-1 rounded-full bg-emerald-400'>
+                        <CheckOutlinedIcon sx={{color:'green'}} fontSize='large'/>
+                    </div>
+                    <h3 className='mt-4 text-xl font-bold'>Request Posted</h3>
+                    <h5 className='mt-2 text-base font-light text-opacity-75 text-center'>Your request was posted! Make your way back to the schedule page to see your request.</h5>
+                    <Link href={'/login/' + params.district + "/student/schedule"} className='mt-7 py-1 px-5 bg-emerald-500 rounded-lg text-lg'>Go to your schedule</Link>
+                </div>
+            </Dialog>
         </div>
     )
 }

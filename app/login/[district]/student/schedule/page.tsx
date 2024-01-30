@@ -1,57 +1,52 @@
 'use client'
 import * as React from 'react'
 import { db, auth } from "@/firebase/config"
-import { onValue, ref, set } from "firebase/database"
+import { onValue, ref, set, remove } from "firebase/database"
 import CachedIcon from '@mui/icons-material/Cached';
 import CloseIcon from '@mui/icons-material/Close';
-import { Modal, CircularProgress } from '@mui/material';
-import { useSession, signIn } from 'next-auth/react';
-import {session} from '@/clientSide/interfaces'
+import WarningAmberOutlinedIcon from '@mui/icons-material/WarningAmberOutlined';
+import { Modal, CircularProgress, Dialog} from '@mui/material';
+import { session } from '@/clientSide/interfaces';
 
-var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-var now = new Date();
+const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const now = new Date();
 
-export default function Page() {
+export default function Page({params}:{params:{district:string}}) {
     const [schedule, setSchedule]:any[] = React.useState([]);
     const [refresh, setRefresh] = React.useState(0);
     const [styling, setStyling]:any[] = React.useState([]);
     const [confirmState, setConfirmState] = React.useState('deactive');
     const [focused, setFocused]:session|null = React.useState(null);
     const [cancelLoad, setCancelLoad] = React.useState(false);
-    const { data:session } = useSession();
-
-    
+    const [cancelDialog, setCancelDialog] = React.useState(false);
 
     React.useEffect(()=>{
-        var theAvailable: any[] = [];
+        var theSchedule: any[] = [];
         var theStyling: string[] = [];
+        console.log(refresh)
+        console.log(auth.currentUser?.uid)
         // setTimeout(()=>{
-            onValue(ref(db, 'mhusd/sessions/'), (snapshot)=>{
-                snapshot.forEach((id) =>{
-                    if(id.key != auth.currentUser?.uid){
-                      id.forEach((child)=>{
-                        var value = child.val();
-                        if(value.date >= now.getTime()){
-                          if(value.available){
-                            // value.milliseconds = value.date;
-                            // value.date = new Date(value.date);
-                            // var indiv = {
-                            //   key:[id.key, child.key],
-                            //   value:value
-                            // }
-                            value.idKey = id.key
-                            value.childKey = child.key
-                            theAvailable.push(value);
-                            theStyling.push('regular')
-                          }
-                        }
-                      })
-                    }
-                  })
+        onValue(ref(db, params.district + '/schedule/' + auth.currentUser?.uid), (snapshot)=>{
+            // console.log(snapshot.val())
+            snapshot.forEach((child)=>{
+                // var aChild:session = child.toJSON();
+                // aChild.design = "flex flex-row w-96 h-64 bg-[#1b1b1b] rounded-2xl relative transition hover:scale-110 hover:-translate-y-4"
+                var theJSON:any = child.toJSON();
+                theJSON.key = child.key;
+                // console.log(theJSON)
+                theSchedule.push(theJSON);
+                // theStyling.push('flex flex-row w-96 h-64 bg-[#1b1b1b] rounded-2xl relative transition hover:scale-110 hover:-translate-y-4');
+                // console.log("child:", child.toJSON())
+                theStyling.push('regular')
+                console.log(theSchedule)
             })
+        })
         // }, 1000)
-        setStyling(theStyling);
-        setSchedule(theAvailable);
+        console.log(theStyling)
+        setTimeout(()=>setSchedule(theSchedule), 100)
+        setTimeout(()=>setStyling(theStyling), 100)
+        // setStyling(theStyling);
+        // setSchedule(theSchedule);
         // console.log(theSchedule)
     }, [refresh])
     React.useEffect(()=>{
@@ -74,7 +69,7 @@ export default function Page() {
 
         const pressed = () =>{
             setFocused(object)
-            setConfirmState('active')
+            setCancelDialog(true)
         }
 
         if(styling[i] == 'open')return(
@@ -103,11 +98,11 @@ export default function Page() {
                     <text className='text-center text-3xl text-slate-50 mt-3'>{"Time: " + object.time}</text>
                     <div className='mt-1.5 bg-slate-800 opacity-50 h-0.5 w-full'/>
                     <text className='text-center text-3xl text-slate-50 mt-3'>{date.toDateString()}</text>
-                    {/* <div className='mt-1.5 bg-slate-800 opacity-50 h-0.5 w-full'/> */}
-                    {/* <text className='text-center text-3xl text-slate-50 mt-3'>{((object.hasOwnProperty('tutorer'))? ((object.tutorer.hasOwnProperty('name'))? object.tutorer.name:"No current tutor"):"No current tutor")}</text> */}
+                    <div className='mt-1.5 bg-slate-800 opacity-50 h-0.5 w-full'/>
+                    <text className='text-center text-3xl text-slate-50 mt-3'>{((object.hasOwnProperty('tutorer'))? ((object.tutorer.hasOwnProperty('name'))? object.tutorer.name:"No current tutor"):"No current tutor")}</text>
                     <div className='mt-1.5 bg-slate-800 opacity-50 h-0.5 w-full'/>
                     <text className='text-center text-3xl mx-3 text-slate-50 mt-3'>{object.text}</text>
-                    <button onClick={pressed} className='text-center p-3 font-light rounded-2xl text-4xl mt-7 bg-gradient-to-br from-emerald-700 to-green-500 w-fit h-fit transition hover:scale-110 hover:-translate-y-2 hover:opacity-80'>Accept</button>
+                    <button onClick={pressed} className='text-center p-3 font-light rounded-2xl text-4xl mt-7 bg-gradient-to-br from-rose-700 to-red-500 w-fit h-fit transition hover:scale-110 hover:-translate-y-2 hover:opacity-80'>Cancel</button>
                 </div>
             </div>
         )
@@ -127,11 +122,11 @@ export default function Page() {
                     <text className='text-center text-3xl text-slate-50 mt-3'>{"Time: " + object.time}</text>
                     <div className='mt-1.5 bg-slate-800 opacity-50 h-0.5 w-full'/>
                     <text className='text-center text-3xl text-slate-50 mt-3'>{date.toDateString()}</text>
-                    {/* <div className='mt-1.5 bg-slate-800 opacity-50 h-0.5 w-full'/> */}
-                    {/* <text className='text-center text-3xl text-slate-50 mt-3'>{((object.hasOwnProperty('tutorer'))? ((object.tutorer.hasOwnProperty('name'))? object.tutorer.name:"No current tutor"):"No current tutor")}</text> */}
+                    <div className='mt-1.5 bg-slate-800 opacity-50 h-0.5 w-full'/>
+                    <text className='text-center text-3xl text-slate-50 mt-3'>{((object.hasOwnProperty('tutorer'))? ((object.tutorer.hasOwnProperty('name'))? object.tutorer.name:"No current tutor"):"No current tutor")}</text>
                     <div className='mt-1.5 bg-slate-800 opacity-50 h-0.5 w-full'/>
                     <text className='text-center mx-3 text-3xl text-slate-50 mt-3'>{object.text}</text>
-                    <button className='text-center p-3 font-light rounded-2xl text-4xl mt-7 bg-gradient-to-br from-emerald-700 to-green-500 w-fit h-fit transition hover:scale-110 hover:-translate-y-2 hover:opacity-80'>Accept</button>
+                    <button className='text-center p-3 font-light rounded-2xl text-4xl mt-7 bg-gradient-to-br from-rose-700 to-red-500 w-fit h-fit transition hover:scale-110 hover:-translate-y-2 hover:opacity-80'>Cancel</button>
                 </div>
                 <button onClick={open} className='flex flex-row w-96 h-fit py-10 bg-[#1b1b1b] rounded-2xl absolute transition hover:scale-110 hover:-translate-y-4 left-0 top-0 animate-jump-in ease-in'>
                     <div className='flex flex-col'>
@@ -171,167 +166,45 @@ export default function Page() {
             setTimeout(()=>{
                 setConfirmState('deactive');
                 setFocused(null);
-                setCancelLoad(false);
         }, 520)
         }
     }
 
-    const signinAgain = async ()=>{
-        await signIn('google');
-    }
-
-    const accepter= async ()=>{
+    const canceler=()=>{
         var date = new Date(focused.date);
         setCancelLoad(true);
-        if(focused != null && !cancelLoad && auth.currentUser != undefined && auth.currentUser != null){
-            // change isAvailable initial val to false once this function for sure works
-            var isAvailable;
-            onValue(ref(db, "mhusd/sessions/" + focused.idKey + "/" + focused.childKey + "/available"), (snapshot)=>{
-              isAvailable = snapshot.val();
-            })
-            if(isAvailable){
-              var instDate = focused.date;
-              var time = focused.time;
-              var addedMills = 0;
-              time = time.split(':');
-              addedMills += parseInt(time[0]) * 3600000;
-              addedMills += parseInt(time[1]) * 60000;
-              time = time[1].split(' ');
-              if(time[1] == "PM"){
-                addedMills += 3600000 * 12;
-              }else if(time[1] == "AM"){
-              }else{
-                alert("An error has occured when calculating the time. Please reload the site and try again.");
-                return
-              }
-
-            //   instDate += 3600000 * 16;
-            //   if(time == "4:30 PM"){
-            //     instDate += 3600000 / 2;
-            //   }else if(time == "5:00 PM"){
-            //     instDate += 3600000;
-            //   }else if(time == "5:30 PM"){
-            //     instDate += 3600000 * 3/2;
-            //   }else if(time == "6:00 PM"){
-            //     instDate += 3600000 * 2;
-            //   }else if(time == "6:30 PM"){
-            //     instDate += 3600000 * 5/2;
-            //   }else if(time == "7:00 PM"){
-            //     instDate += 3600000 * 3;
-            //   }else{
-            //     alert("An error has occured when calculating the time. Please reload the app and try again");
-            //     closer();
-            //     return;
-            //   }
-
-              console.log(instDate);
-              const start = new Date(instDate);
-              const end = new Date(instDate + 3600000);
-              var description = "Subject: " + focused.subject + "    Grade: " + focused.grade;
-              var requestId = focused.childKey;
-              requestId = requestId.substring(0, 7);
-              const myeEvent = {
-                'summary': "Tutor Session",
-                'description': description,
-                'start':{
-                  'dateTime':start.toISOString(),
-                  'timeZone':'America/Los_Angeles'
-                },
-                'end':{
-                  'dateTime':end.toISOString(),
-                  'timeZone':'America/Los_Angeles'
-                },
-                'attendees':[
-                  {'email':auth.currentUser?.email},
-                  {'email':focused.email}
-                ],
-                'conferenceData':{
-                  'conferenceSolution':{
-                    'key':{'type':'hangoutsMeet'},
-                    'name':'Google Meet'
-                  },
-                  'createRequest':{
-                    'requestId':requestId,
-                    'conferenceSolutionKey':{
-                      'type':'hangoutsMeet'
+        if(focused != null && !cancelLoad){
+            if(!focused.available){
+                if(now.getMonth() < date.getMonth() || now.getDate() + 2 < date.getDate()){
+                    if(focused.tutoree == auth.currentUser?.uid){
+                        remove(ref(db, params.district + "/sessions/" + auth.currentUser?.uid + "/" + focused.key));
+                        remove(ref(db, params.district + "/schedule/" + auth.currentUser?.uid + "/" + focused.key));
+                        set(ref(db, params.district + "/schedule/" + focused.tutorer.id + "/" + focused.key + "/studentCanceled"), true);
+                    }else{
+                        remove(ref(db, params.district + "/schedule/" + auth.currentUser?.uid + "/" + focused.key));
+                        set(ref(db, params.district + "/sessions/" + focused.tutoree + "/" + focused.key + "/available"), true);
+                        set(ref(db, params.district + "/schedule/" + focused.tutoree + "/" + focused.key + "/available"), true);
+                        set(ref(db, params.district + "/schedule/" + focused.tutoree + "/" + focused.key + "/tutorer"), {canceled:true});
                     }
-                  }
-                },
-                'guestsCanModify':true,
-                'reminders':{
-                  'overides':[
-                    {'method':"email", 'minutes':24*60},
-                    {'method':"email", 'minutes':120}
-                  ]
-                }
-              }
-              var name = auth.currentUser?.displayName.split(" ");
-              console.log(start.toDateString());
-              const token = session?.accessToken
-              
-              await fetch("https://www.googleapis.com/calendar/v3/calendars/primary/events", {
-                method:"POST",
-                headers:{
-                  'Authorization':'Bearer ' + token,
-                },
-                eventId:focused.childKey,
-                body:JSON.stringify(myeEvent),
-                conferenceDataVersion:1, 
-                sendUpdates:"all",
-                
-              }).then((data)=>{
-                if(data.ok){
-                  var displaying = focused;
-                  var name = auth.currentUser?.displayName.split(" ");
-                  set(ref(db, "mhusd/sessions/" + focused.idKey + "/" + focused.childKey + "/available"), false);
-                  set(ref(db, "mhusd/schedule/" + focused.idKey + "/" + focused.childKey + "/tutorer"), {
-                    name:auth.currentUser?.displayName,
-                    id:auth.currentUser?.uid
-                  });
-                  displaying.tutor = name[0];
-                //   overlayInfo.setModalDisplay(false);
-                //   overlayInfo.setOverlay(false);
-                  closer();
-                  set(ref(db, "mhusd/sessions/" + focused.idKey + "/" + focused.childKey + "/available"), false);
-                  set(ref(db, "mhusd/schedule/" + focused.idKey + "/" + focused.childKey + "/available"), false);
-                  var upload = focused
-                //   upload.date = upload.milliseconds;
-                  upload.available = false;
-                  delete upload['childKey']
-                  delete upload['idKey']
-                //   delete upload['milliseconds'];
-                  set(ref(db, "mhusd/schedule/" + auth.currentUser?.uid + "/" + focused.childKey), upload);
-                  var niceData = JSON.stringify(data);
-                  console.log(niceData);
-                  alert("Check your google calendar. An event was set for " + start.toDateString());
-                //   overlayInfo.setLoading(false);
-                //   overlayInfo.setExplain(true);
                 }else{
-                //   overlayInfo.setModalDisplay(false);
-                //   overlayInfo.setOverlay(false);
-                closer();
-                  alert("An error occured adding event to google calndar. You may not have given the app permision to access google calendar. To fix this: logout, sign back in, and give the app permision to acces your google calendar.")
-                  console.log(token);
-                //   signinAgain();
-                //   overlayInfo.setLoading(false);
+                    alert("I'm sorry but you can't cancel within two days of your set date when the session is taken. You can contact the other student directly through the google calendar event if you need to.");
                 }
-                
-              }).catch((error)=>{
-                console.log(error);
-                alert("An error occured adding to calendar: " + error);
-                // overlayInfo.setLoading(false);
-                closer();
-              })
             }else{
-              alert("I'm sorry, it seems that somebody else has already taken this tutor session");
-            //   overlayInfo.setLoading(false);
-            closer();
+                remove(ref(db, params.district + "/sessions/" + auth.currentUser?.uid + "/" + focused.key));
+                remove(ref(db, params.district + "/schedule/" + auth.currentUser?.uid + "/" + focused.key));
             }
+            setTimeout(()=>{
+                setCancelLoad(false);
+                closer();
+                setRefresh(refresh+1);
+            }, 2000)
+        }else{
+            alert("ERROR: Nothing is in focus");
         }
     }
 
     return(
-        <div className='flex flex-col w-screen h-full justify-center items-center'>
+        <div className='flex flex-col w-full h-full justify-center items-center'>
             <button onClick={()=>setRefresh(refresh+1)} className='self-end mt-6 mr-12 transition ease-in-out hover:scale-110 hover:-translate-y-2'>
                 <CachedIcon sx={{fontSize:55}}/>
             </button>
@@ -339,7 +212,37 @@ export default function Page() {
                 {schedule.map((object:session, i:number)=>Tab(object, i))}
             </div>
             {/* <div className='w-full h-28 bg-transparent'/> */}
-            {(confirmState != 'deactive')?(confirmState == 'active')?<Modal open onClose={closer}>
+            <Dialog onClose={()=>{
+                setCancelDialog(false);
+                setFocused({});
+            }}  open={cancelDialog}
+            >
+                {/* <div className='w-screen h-fit px-4'> */}
+                    <div className='flex flex-row bg-[#121820] w-fit h-fit px-10 py-8 relative items-start justify-start'>
+                        <div className='w-fit h-fit p-2 bg-rose-400 rounded-full mt-1'>
+                            <WarningAmberOutlinedIcon sx={{color:'red'}} fontSize='large'/>
+                        </div>
+                        <div className='flex-grow flex flex-col h-fit ml-6'>
+                            <h3 className='text-xl text-start font-bold'>Cancel Request</h3>
+                            <h5 className='text-base opacity-75 font-light mt-2'>This action cannot be undone, please review what you are canceling.{' Class: ' + focused?.subject + ', ' + new Date(focused?.date).toDateString() + ', Time: ' + focused?.time  + ', Location: ' + focused?.location}</h5>
+                            <div className='w-full flex flex-row h-fit justify-end mt-4'>
+                                <button onClick={()=>{
+                                    setCancelDialog(false);
+                                    setFocused({});
+                                }}  className='w-fit h-fit py-1 px-4 outline outline-1 outline-zinc-500 rounded-lg text-lg mr-5'>Cancel</button>
+                                <button onClick={canceler} className='w-fit h-fit py-1 px-4 bg-red-500 text-lg rounded-lg'>Confirm</button>
+                            </div>
+                        </div>
+                        <button onClick={()=>{
+                            setCancelDialog(false);
+                            setFocused({});
+                        }} className='absolute right-2.5 top-2.5'>
+                            <CloseIcon sx={{fontSize:30, color:'GrayText'}}/>
+                        </button>
+                    </div>
+                {/* </div> */}
+            </Dialog>
+            {/* {(confirmState != 'deactive')?(confirmState == 'active')?<Modal open onClose={closer}>
                 <div 
                 // onClick={()=>{setConfirmState('closing'); setTimeout(()=>setConfirmState('deactive'), 500)}} 
                 className='flex w-full h-full justify-center items-center'>
@@ -351,7 +254,7 @@ export default function Page() {
                         <text className='text-slate-50 text-3xl text-center'>{(focused.location == 'Google Meets')?null:"Location: "}{focused.location}</text>
                         {cancelLoad?
                             <CircularProgress size={70} thickness={2}/>:
-                            <button onClick={accepter} className='text-center p-3 items-center font-light rounded-2xl text-4xl mt-7 bg-gradient-to-br from-emerald-700 to-green-500 w-fit h-fit transition hover:scale-110 hover:-translate-y-2 hover:opacity-80'>Confirm</button>
+                            <button onClick={canceler} className='text-center p-3 items-center font-light rounded-2xl text-4xl mt-7 bg-gradient-to-br from-rose-700 to-red-500 w-fit h-fit transition hover:scale-110 hover:-translate-y-2 hover:opacity-80'>Confirm</button>
                         }
                         <button className='absolute right-3 top-3 transition hover:scale-110 hover:-translate-y-1' onClick={closer}><CloseIcon fontSize='large'/></button>
                     </div>
@@ -362,16 +265,16 @@ export default function Page() {
                 // onClick={()=>{setConfirmState('closing'); setTimeout(()=>setConfirmState('deactive'), 500)}} 
                 className='flex w-full h-full justify-center items-center'>
                     <div className='flex flex-col items-center justify-center pt-12 pb-6 gap-y-3 px-6 animate-duration-500 relative animate-jump-out ease-out h-fit w-96 bg-[#1e1e1e] rounded-2xl'>
-                        <text className='text-slate-50 text-4xl text-center'>Are you sure you want to cancel?</text>
+                        <text className='text-slate-50 text-4xl text-center'>Are you sure you want to cancel? This cannot be undone</text>
                         <text className='text-slate-50 text-3xl text-center mt-4'>Class:{" " + focused.subject}</text>
                         <text className='text-slate-50 text-3xl text-center'>{new Date(focused.date).toDateString()}</text>
                         <text className='text-slate-50 text-3xl text-center'>{focused.time}</text>
                         <text className='text-slate-50 text-3xl text-center'>{(focused.location == 'Google Meets')?null:"Location: "}{focused.location}</text>
-                        <button className='text-center p-3 items-center font-light rounded-2xl text-4xl mt-7 bg-gradient-to-br from-emerald-700 to-green-500 w-fit h-fit transition hover:scale-110 hover:-translate-y-2 hover:opacity-80'>Confirm</button>
+                        <button className='text-center p-3 items-center font-light rounded-2xl text-4xl mt-7 bg-gradient-to-br from-rose-700 to-red-500 w-fit h-fit transition hover:scale-110 hover:-translate-y-2 hover:opacity-80'>Confirm</button>
                         <button className='absolute right-3 top-3 transition hover:scale-110 hover:-translate-y-1'><CloseIcon fontSize='large'/></button>
                     </div>
                 </div>
-            </Modal>:null}
+            </Modal>:null} */}
         </div>
     )
 }

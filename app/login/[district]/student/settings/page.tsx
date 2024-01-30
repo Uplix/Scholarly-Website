@@ -12,7 +12,7 @@ import Rating from '@mui/material/Rating'
 import { CircularProgress, Backdrop } from "@mui/material";
 import { useRouter } from "next/navigation";
 
-export default function Settings(){
+export default function Settings({params}:{params:{district:string}}){
     const [fetching, setFetching] = React.useState(true);
     const [reload, setReload] = React.useState(0);
     const [sure, setSure] = React.useState<suresees|null>(null)
@@ -35,14 +35,14 @@ export default function Settings(){
     React.useEffect(()=>{
         var isATutor = false;
         if(auth.currentUser != undefined && auth.currentUser != null){
-            onValue(ref(db, 'mhusd/users/' + auth.currentUser?.uid + '/isTutor'), (snapshot)=>{
+            onValue(ref(db, params.district + '/users/' + auth.currentUser?.uid + '/isTutor'), (snapshot)=>{
                 if(snapshot.exists() && snapshot.val() === true){
                     isATutor = snapshot.val();
                 }
             })
             var theRating = 0;
             var numRatings = 0;
-            onValue(ref(db, 'mhusd/users/' + auth.currentUser?.uid + '/ratings'), (snapshot)=>{
+            onValue(ref(db, params.district + '/users/' + auth.currentUser?.uid + '/ratings'), (snapshot)=>{
                 snapshot.forEach((child)=>{
                     theRating += child.val();
                     numRatings++;
@@ -85,6 +85,7 @@ export default function Settings(){
         router.push('/login');
     }
 
+    // change to request deletion from staff
     const deleteAccount = async ()=>{
         await signingOut();
         closeModal();
@@ -99,9 +100,9 @@ export default function Settings(){
     }
 
     return(
-        <div className="flex flex-col w-full h-full items-center mt-16">
-            <div className="scale-200 rounded-full w-fit h-fit animate-jump-in animate-ease-in">
-                {(auth.currentUser == null || auth.currentUser == undefined)? <PersonIcon fontSize='large'/>:<Avatar alt={"Profile Image"} src={auth.currentUser.photoURL}/>}
+        <div className="flex flex-col w-full h-fit items-center pt-6 pb-10">
+            <div className="rounded-full w-fit h-fit animate-jump-in animate-ease-in">
+                {(auth.currentUser == null || auth.currentUser == undefined)? <PersonIcon fontSize='large'/>:<Avatar sx={{width:70, height:70}} alt={"Profile Image"} src={auth.currentUser.photoURL}/>}
             </div>
             <text className="text-slate-50 text-5xl text-center w-fit h-fit mt-8 mb-10 animate-jump-in animate-ease-in">Hi{" "+auth.currentUser?.displayName?.split(' ')[0] + " 👋"}</text>
             <div className="flex flex-col w-fit h-fit items-start px-5 animate-jump-in animate-ease-in">
@@ -115,8 +116,8 @@ export default function Settings(){
             <div className="mt-10 animate-jump-in animate-ease-in">
                 <Rating sx={{fontSize:65}} defaultValue={(rating.numRatings == 0)?0:rating.rating/rating.numRatings} precision={0.1} readOnly/>
             </div>            
-            <button onClick={()=>setSure({text:"Are you sure you want to sign out?", click:signingOut, fix:true, state:'open'})} className="text-center p-3 items-center font-light rounded-2xl text-3xl mt-12 bg-gradient-to-br from-rose-700 to-red-500 w-fit h-fit transition hover:scale-110 hover:-translate-y-2 hover:opacity-80">Sign Out</button>
-            <button onClick={()=>setSure({text:"Are you sure you want to delete your account?", click:deleteAccount, fix:false, state:'open'})} className="text-center p-3 items-center font-light rounded-2xl text-3xl mt-12 mb-12 bg-gradient-to-br from-rose-700 to-red-500 w-fit h-fit transition hover:scale-110 hover:-translate-y-2 hover:opacity-80">Delete Account</button>
+            {/* <button onClick={()=>setSure({text:"Are you sure you want to sign out?", click:signingOut, fix:true, state:'open'})} className="text-center p-3 items-center font-light rounded-2xl text-3xl mt-12 bg-gradient-to-br from-rose-700 to-red-500 w-fit h-fit transition hover:scale-110 hover:-translate-y-2 hover:opacity-80">Sign Out</button> */}
+            <button onClick={()=>setSure({text:"Are you sure you want to delete your account?", click:deleteAccount, fix:false, state:'open'})} className="text-center p-3 items-center font-light rounded-2xl text-3xl mt-12 bg-gradient-to-br from-rose-700 to-red-500 w-fit h-fit transition hover:scale-110 hover:-translate-y-2 hover:opacity-80">Delete Account</button>
             {(sure!=null)?<Modal open onClose={closeModal}>
                 <div className="flex w-full h-full justify-center items-center">
                     <div className={modalClassName}>

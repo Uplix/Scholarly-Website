@@ -46,7 +46,7 @@ export default function TimeEdit(){
         }
         // console.log(theTimes);
         set(ref(db, 'mhusd/requestInfo/times/'), theTimes)
-        router.push('/login/staffLogin/staff/options')
+        router.push('/login/staff/options')
     }
 
     const TimeHead = ({value, display}:{value:string, display:string}) => {

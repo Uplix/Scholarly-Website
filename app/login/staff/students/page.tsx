@@ -127,7 +127,7 @@ export default function Students(){
     }
 
     const studentClicked:GridEventListener<'rowDoubleClick'> = (params, event, details) =>{
-        router.push('/login/staffLogin/staff/students/' + params.id)
+        router.push('/login/staff/students/' + params.id)
     }
 
     return(
