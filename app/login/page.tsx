@@ -1,41 +1,82 @@
 'use client'
-import Link from 'next/link'
-import {auth} from '@/firebase/config'
-import { useRouter } from 'next/navigation'
-import Image from 'next/image'
-import StudentIcon from '@/components/studentdesk.svg'
-import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
-import ChildCareIcon from '@mui/icons-material/ChildCare';
+import * as React from 'react'
+import Image from "next/image"
+import { useRouter } from "next/navigation"
+import SchoolIcon from '@/components/schoolIcon.svg'
+import { Autocomplete, Box, TextField, Collapse } from '@mui/material'
+import ArrowForwardOutlinedIcon from '@mui/icons-material/ArrowForwardOutlined';
 
-export default function Home() {
+export default function District(){
+    const [selected, setSelected] = React.useState('');
+    const [options, setOptions] = React.useState<any[]>([]);
+    const [arrowOpen, setArrowOpen] = React.useState(false);
+    const [error, setError] = React.useState(false);
+
     const router = useRouter();
 
-    const studentLogin = () =>{
-        if(auth.currentUser != undefined && auth.currentUser != null){
-            router.push('/login/studentLogin/student/schedule');
-        }else{
-            router.push('/login/studentLogin')
-        }
+    React.useEffect(()=>{
+        setTimeout(()=>{
+            var theOptions:any[] = [];
+            process.env.NEXT_PUBLIC_DISTRICTS?.split(',').forEach((value)=>{
+                theOptions.push(value.split(':')[0].toUpperCase());
+            })
+            setOptions(theOptions);
+            console.log(options, theOptions)
+        }, 500)
+    }, [])
+
+    const continuer = ()=>{
+       if(selected != undefined && selected != null && selected != ''){
+            setError(false);
+            router.push('/login/' + selected.toLowerCase())
+       }else{
+            setError(true);
+       }
     }
 
-    const staffLogin = () =>{
-        router.push('/login/staffLogin');
-    }
-
-    return (
-        <main className='flex min-h-screen flex-col items-center justify-center w-screen py-5'>
-            <h2 className='text-7xl font-semibold text-center'>Sign In</h2>
-            <h5 className='text-4xl text-center mt-7 max-w-xl px-8'>What kind of account do you want to login to?</h5>
-            <div className='flex flex-row flex-wrap items-center justify-center gap-x-16 gap-y-10 mt-12 px-8'>
-                <button onClick={studentLogin} className='bg-gradient-to-br transition from-indigo-500 from-15% via-sky-500 via-40% to-emerald-500 hover:scale-110 w-48 h-64 rounded-lg flex flex-col items-center justify-end'>
-                    <Image className='mb-8 scale-125' alt='Student Icon' src={StudentIcon} width={55} height={55}/>
-                    <h4 className='text-4xl font-semibold mb-14'>Student</h4>
-                </button>
-                <button onClick={staffLogin} className='bg-gradient-to-bl transition from-indigo-500 from-15% via-sky-500 via-40% to-emerald-500 hover:scale-110 w-48 h-64 rounded-lg flex flex-col items-center justify-end'>
-                    <SupervisorAccountIcon className='mb-1.5' sx={{fontSize:110}} />
-                    <h4 className='text-4xl font-semibold mb-14'>Staff</h4>
+    return(
+        <div className="flex flex-row flex-wrap min-h-screen items-center justify-center">
+            <div className="w-96 flex flex-col items-center">
+                <Image alt="School-Icon" src={SchoolIcon} width={300} height={0}/>
+            </div>
+            <div className="w-full max-w-2xl flex flex-col items-center justify-center">
+                <h2 className="text-4xl font-light text-center px-5">What is your school district?</h2>
+                <div className='w-full max-w-xl px-20 mt-10'>
+                    <Autocomplete 
+                        value={selected}
+                        onChange={(event: any, newValue: string | null) => {
+                            setSelected((newValue == null)? '':newValue);
+                          }}
+                        id='district-choice'
+                        fullWidth
+                        options={options}
+                        autoHighlight
+                        getOptionLabel={(option)=>option}
+                        renderOption={(props, option)=>(
+                            <Box component='li' {...props}>
+                                {option}
+                            </Box>
+                        )}
+                        renderInput={(params)=>(
+                            <TextField 
+                                {...params}
+                                label="District"
+                                inputProps={{
+                                    ...params.inputProps,
+                                    autoComplete: 'new-password',
+                                }}
+                                error={error}
+                            />
+                        )}
+                    />
+                </div>
+                <button onClick={continuer} onFocus={()=>setArrowOpen(true)} onBlur={()=>setArrowOpen(false)} onMouseOver={()=>setArrowOpen(true)} onMouseLeave={()=>setArrowOpen(false)} className='flex flex-row mt-14 gap-x-3 justify-center items-center transition-all text-4xl font-light'>
+                    <h4 className='opacity-90'>Continue</h4>
+                    <Collapse in={arrowOpen} orientation='horizontal'>
+                        <ArrowForwardOutlinedIcon fontSize='large'/>
+                    </Collapse>
                 </button>
             </div>
-        </main>
+        </div>
     )
 }

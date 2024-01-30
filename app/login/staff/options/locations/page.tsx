@@ -42,7 +42,7 @@ export default function LocationEdit(){
 
     const publishChanges = ()=>{
         set(ref(db, 'mhusd/requestInfo/locations/'), locations.join(','))
-        router.push('/login/staffLogin/staff/options');
+        router.push('/login/staff/options');
     }
 
     const Indiv = ({value, index}:{value:string, index:number})=>{

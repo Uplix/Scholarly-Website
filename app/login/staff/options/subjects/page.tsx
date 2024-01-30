@@ -40,7 +40,7 @@ export default function SubjectEdit(){
             theCurrent[subjects[i].subject] = subjects[i].classes.join(',');
        }
        set(ref(db, 'mhusd/requestInfo/subjects/'), theCurrent);
-       router.push('/login/staffLogin/staff/options');
+       router.push('/login/staff/options');
     }
 
     const SubjectHead = ({value, index, array}:{value:any, index:number, array:any[]}) => {
