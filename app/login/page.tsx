@@ -16,7 +16,7 @@ export default function District() {
 
   React.useEffect(() => {
     setTimeout(() => {
-      var theOptions: any[] = [];
+      let theOptions: any[] = [];
       process.env.NEXT_PUBLIC_DISTRICTS?.split(",").forEach((value) => {
         theOptions.push(value.split(":")[0].toUpperCase());
       });
