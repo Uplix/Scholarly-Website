@@ -1,4 +1,5 @@
 export interface session{
+    tutorer: any;
     available:boolean,
     date:number,
     email:string,

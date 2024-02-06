@@ -8,7 +8,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { DeleteOutlineOutlined } from '@mui/icons-material'
 import { useRouter } from 'next/navigation'
 
-export default function LocationEdit(){
+export default function LocationEdit({params}:{params:{district:string}}){
     const [locations, setLocations]:any[] = React.useState([]);
     const [reload, setReload] = React.useState(0);
     const [addLocationButtonColor, setAddLocationButtonColor] = React.useState('primary');
@@ -42,7 +42,7 @@ export default function LocationEdit(){
 
     const publishChanges = ()=>{
         set(ref(db, 'mhusd/requestInfo/locations/'), locations.join(','))
-        router.push('/login/staff/options');
+        router.push('/login/' + params.district + '/staff/options');
     }
 
     const Indiv = ({value, index}:{value:string, index:number})=>{

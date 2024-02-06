@@ -11,7 +11,7 @@ import { Box, Container } from '@mui/material';
 import Link from 'next/link';
 
 
-export default function Options(){
+export default function Options({params}:{params:{district:string}}){
     const [classes, setClasses]:any[] = React.useState([]);
     const [times, setTimes]:any = React.useState({
         physical:[],
@@ -112,7 +112,7 @@ export default function Options(){
                                     </Container>
                                 </div>
                                 {/* <div className='flex flex-row justify-end w-full max-h-3'> */}
-                                    <Link href={'/login/staff/options/subjects'} className='absolute top-4 right-4 transition delay-150 hover:scale-110 hover:-translate-y-1'><EditIcon fontSize='large'/></Link>
+                                    <Link href={'/login/' + params.district + '/staff/options/subjects'} className='absolute top-4 right-4 transition delay-150 hover:scale-110 hover:-translate-y-1'><EditIcon fontSize='large'/></Link>
                                 {/* </div> */}
                             </div>
                         </div>
@@ -124,7 +124,7 @@ export default function Options(){
                         <div className='flex flex-col items-center w-56 max-h-96'>
                             <div className='flex flex-col min-w-full min-h-full relative'>
                                 {/* <div className='flex flex-row justify-end w-full max-h-3'>
-                                    <Link href={'/login/staff/options/subjects'} className='mr-5 mt-5 transition delay-150 hover:scale-110 hover:-translate-y-1'><EditIcon fontSize='large'/></Link>
+                                    <Link href={'/login/' + params.district + '/staff/options/subjects'} className='mr-5 mt-5 transition delay-150 hover:scale-110 hover:-translate-y-1'><EditIcon fontSize='large'/></Link>
                                 </div> */}
                                 <div className='scale-150 h-max w-max'>
                                     <Container sx={{maxHeight:300}}>
@@ -144,7 +144,7 @@ export default function Options(){
                                         </Box>
                                     </Container>
                                 </div>
-                                <Link href={'/login/staff/options/times'} className='absolute top-4 right-4 transition delay-150 hover:scale-110 hover:-translate-y-1'><EditIcon fontSize='large'/></Link>
+                                <Link href={'/login/' + params.district + '/staff/options/times'} className='absolute top-4 right-4 transition delay-150 hover:scale-110 hover:-translate-y-1'><EditIcon fontSize='large'/></Link>
                             </div>
                         </div>
                     </div>
@@ -154,7 +154,7 @@ export default function Options(){
                     <div className='pl-8 pr-5 mt-3 overflow-auto rounded-lg bg-gradient-to-br from-violet-300 to-violet-700 bg-opacity-60 mix-blend-lighten'>
                         <div className='flex flex-col items-center w-56 h-96'>
                             <div className='flex flex-row justify-end w-full max-h-3'>
-                                <Link href={'/login/staff/options/locations'} className='mr-5 mt-5 transition delay-150 hover:scale-110 hover:-translate-y-1'><EditIcon fontSize='large'/></Link>
+                                <Link href={'/login/' + params.district + '/staff/options/locations'} className='mr-5 mt-5 transition delay-150 hover:scale-110 hover:-translate-y-1'><EditIcon fontSize='large'/></Link>
                             </div>
                             <div className='flex flex-col items-start w-full h-fit mt-12 ml-10 gap-y-2'>
                                 {locations.map((location:string)=>(<text className='text-2xl text-slate-50'>{"-   " + location}</text>))}
@@ -171,7 +171,7 @@ export default function Options(){
                     </div>
                 </div>
                 <div className='flex flex-row justify-end w-full max-h-3 absolute top-9 right-6'>
-                    {/* <Link href={'/login/staff/options/grades'} className='mr-5 mt-5 transition delay-150 hover:scale-110 hover:-translate-y-1'><EditIcon fontSize='large'/></Link> */}
+                    {/* <Link href={'/login/' + params.district + '/staff/options/grades'} className='mr-5 mt-5 transition delay-150 hover:scale-110 hover:-translate-y-1'><EditIcon fontSize='large'/></Link> */}
                 </div>
             </div>
         </div>

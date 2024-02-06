@@ -65,8 +65,8 @@ export default function Home() {
                     </div>
                 </div>
                 {/* <div className='flex-grow'/> */}
-                <div className='flex overflow-hidden xl:overflow-visible max-h-96 xl:h-auto flex-col items-center xl:items-end justify-center w-full xl:w-2/5 xl:max-h-screen'>
-                    <img className='w-full h-full object-cover'  src='/images/IMG_5682.jpeg'/>
+                <div className='flex overflow-hidden lg:overflow-visible max-h-96 xl:h-auto flex-col items-center lg:items-end justify-center w-full lg:w-2/5 lg:max-h-screen relative'>
+                    <img className='w-full h-full object-cover'  src='/images/homePageImage.jpeg'/>
                 </div>
             </div>
             <div className='flex flex-col items-center px-12 w-full h-fit'>
@@ -164,8 +164,8 @@ export default function Home() {
                     </div>
                 </div>
             </div>
-            <div className='w-full h-fit py-8 rounded-lg px-3'>
-                <ImageScroller images={['/images/peer-tutoring-placeholder.jpg', '/images/peer-tutoring-placeholder.jpg', '/images/peer-tutoring-placeholder.jpg', '/images/peer-tutoring-placeholder.jpg', '/images/peer-tutoring-placeholder.jpg', '/images/peer-tutoring-placeholder.jpg']}/>
+            <div className='w-full h-fit py-4 rounded-lg px-3'>
+                <ImageScroller images={['/images/image1.jpeg', '/images/image2.jpeg', '/images/image3.jpeg', '/images/image4.jpeg']}/>
             </div>
             <div className='w-screen h-fit bg-gradient-radial to-emerald-500 via-sky-500 from-violet-400 pt-12 pb-12'>
                 <h2 className='text-6xl md:text-8xl font-semibold text-center text-zinc-100 px-12'>Get the app!</h2>

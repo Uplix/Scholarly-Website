@@ -8,7 +8,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { DeleteOutlineOutlined } from '@mui/icons-material'
 import { useRouter } from 'next/navigation'
 
-export default function TimeEdit(){
+export default function TimeEdit({params}:{params:{district:string}}){
     const [times, setTimes]:any = React.useState({
         virtual:[],
         physical:[]
@@ -46,7 +46,7 @@ export default function TimeEdit(){
         }
         // console.log(theTimes);
         set(ref(db, 'mhusd/requestInfo/times/'), theTimes)
-        router.push('/login/staff/options')
+        router.push('/login/' + params.district + '/staff/options')
     }
 
     const TimeHead = ({value, display}:{value:string, display:string}) => {
