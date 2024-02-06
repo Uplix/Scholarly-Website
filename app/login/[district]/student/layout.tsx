@@ -1,7 +1,7 @@
 'use client'
 import * as React from 'react'
 import Image from 'next/image';
-import { Avatar, CircularProgress, Collapse, Popover, Dialog } from "@mui/material";
+import { Avatar, CircularProgress, Collapse, Popover, Dialog, Alert } from "@mui/material";
 import {auth, db} from '@/firebase/config'
 import PersonIcon from '@mui/icons-material/Person';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -20,6 +20,8 @@ import { useRouter } from 'next/navigation';
 
 // import Modal from '@mui/material/Modal';
 
+export const AlertContext = React.createContext<any>(null);
+
 export default function StudentLayout({
     children, params
 }: {
@@ -27,6 +29,8 @@ export default function StudentLayout({
     params:{district:string}
 }){
     const pathName = usePathname();
+
+    const [errorDisplay, setErrorDisplay] = React.useState<boolean|string>(false);
 
     const [windowWidth, setWindowWidth] = React.useState<number>((window != undefined)? window.innerWidth:0)
     const [menu, setMenu] = React.useState(false);
@@ -87,6 +91,7 @@ export default function StudentLayout({
                 setPage(thePage)
             }
             closeMobileNav();
+            setErrorDisplay(false);
         }
     }, [pathName])
 
@@ -185,103 +190,106 @@ export default function StudentLayout({
     }
 
     return(
-        <div className='w-screen max-w-full h-screen max-h-screen flex flex-col'>
-            {(windowWidth < 1100)?
-            <div className='w-screen h-fit py-4 flex flex-row items-center justify-start border-b-2 border-zinc-200'>
-                <button onClick={openMobileNav} className='w-fit h-fit ml-7'>
-                    <MenuIcon fontSize='large'/>
-                </button>
-                <h4 className='text-2xl ml-9 font-light text-slate-200'>{page}</h4>
-                <div className='flex-grow'/>
-                <Avatar sx={{marginRight:3, width:40, height:40}} src={auth.currentUser?.photoURL}/>
-            </div>:null}
-            <div className='w-screen max-w-full h-screen max-h-screen flex flex-row justify-center'>
-                <div>
-                    {(windowWidth > 1100)?
-                        <Collapse in orientation='horizontal'>
-                            <div className='w-72 h-screen bg-[#121820] flex flex-col rounded-lg shadow-lg shadow-slate-200'>
-                                <div className='w-fit h-fit ml-4 mt-6'>
-                                    <Link href={'/'} className='w-fit h-fit'>
-                                        <Image alt='scholarly-icon' src={'/images/sizedCircularScholarlyIcon.png'} width={60} height={60}/>
-                                    </Link>
-                                </div>
-                                <div className='w-full h-fit mt-9 pl-2 pr-4'>
-                                    <Link href={'/login/'+params.district +'/student/schedule'} className={(page==="Schedule")?"w-full px-2.5 py-2 rounded-lg text-3xl flex flex-row items-center transition bg-[#212936] text-zinc-100":'w-full px-2.5 py-2 rounded-lg text-3xl  flex flex-row items-center transition text-[#9da3ae] hover:bg-[#212936] hover:text-zinc-100'}><CalendarTodayIcon className='mr-3' fontSize='large'/>Schedule</Link>
-                                    {isTutor?<Link href={'/login/'+params.district +'/student/available'} className={(page==="Available")?"mt-3 w-full px-2.5 py-2 rounded-lg text-3xl flex flex-row items-center transition bg-[#212936] text-zinc-100":'mt-3 w-full px-2.5 py-2 rounded-lg text-3xl  flex flex-row items-center transition text-[#9da3ae] hover:bg-[#212936] hover:text-zinc-100'}><PersonAddAltOutlinedIcon className='mr-3' fontSize='large'/>Available</Link>:null}
-                                    <Link href={'/login/'+params.district +'/student/request'} className={(page==="Request")?"mt-3 w-full px-2.5 py-2 rounded-lg text-3xl flex flex-row items-center transition bg-[#212936] text-zinc-100":'mt-3 w-full px-2.5 py-2 rounded-lg text-3xl  flex flex-row items-center transition text-[#9da3ae] hover:bg-[#212936] hover:text-zinc-100'}><AddIcon className='mr-3' fontSize='large'/>Request</Link>
-                                    <Link href={'/login/'+params.district +'/student/settings'} className={(page==="Settings")?"mt-3 w-full px-2.5 py-2 rounded-lg text-3xl flex flex-row items-center transition bg-[#212936] text-zinc-100":'mt-3 w-full px-2.5 py-2 rounded-lg text-3xl  flex flex-row items-center transition text-[#9da3ae] hover:bg-[#212936] hover:text-zinc-100'}><SettingsIcon className='mr-3' fontSize='large'/>Settings</Link>
-                                </div>
-                                <div className='flex-grow'/>
-                                <Collapse orientation='vertical' in={profilePopover}>
-                                    <div className='w-full h-fit px-8 flex flex-col items-center'>
-                                        <button onClick={signingOut} className='w-full h-fit text-xl text-zinc-100 mb-3 bg-gradient-radial from-[#f17171] to-[#f03030] py-2 rounded-lg'>Sign out</button>
-                                    </div>
-                                </Collapse>
-                                <div className='w-full h-fit pl-1.5 mb-5 pr-2.5'>
-                                    <button onClick={handleProfilePopover} className='px-2 w-full h-fit text-md transition hover:bg-[#212936] text-zinc-100 flex flex-row items-center py-2 rounded-lg'><Avatar src={auth.currentUser?.photoURL} className='mr-3'/>{auth.currentUser?.displayName}</button>
-                                </div>
-                            </div>
-                        </Collapse>
-                        :
-                        <>
-                            {menu?<Modal open={menu} onClose={closeMobileNav}>
-                                <div className='flex flex-row w-screen h-screen'>
-                                <Collapse in={mobileCollapse} orientation='horizontal'>
+        <AlertContext.Provider value={{setErrorDisplay:setErrorDisplay}}>
+            <div className='w-screen max-w-full h-screen max-h-screen flex flex-col'>
+                {(windowWidth < 1100)?
+                <div className='w-screen h-fit py-4 flex flex-row items-center justify-start border-b-2 border-zinc-200'>
+                    <button onClick={openMobileNav} className='w-fit h-fit ml-7'>
+                        <MenuIcon fontSize='large'/>
+                    </button>
+                    <h4 className='text-2xl ml-9 font-light text-slate-200'>{page}</h4>
+                    <div className='flex-grow'/>
+                    <Avatar sx={{marginRight:3, width:40, height:40}} src={auth.currentUser?.photoURL}/>
+                </div>:null}
+                <div className='w-screen max-w-full h-screen max-h-screen flex flex-row justify-center'>
+                    <div>
+                        {(windowWidth > 1100)?
+                            <Collapse in orientation='horizontal'>
                                 <div className='w-72 h-screen bg-[#121820] flex flex-col rounded-lg shadow-lg shadow-slate-200'>
-                                <div className='w-fit h-fit ml-4 mt-6'>
-                                    <Link href={'/'} className='w-fit h-fit'>
-                                        <Image alt='scholarly-icon' src={'/images/sizedCircularScholarlyIcon.png'} width={60} height={60}/>
-                                    </Link>
-                                </div>
-                                <div className='w-full h-fit mt-9 pl-2 pr-4'>
-                                    <Link href={'/login/'+params.district +'/student/schedule'} className={(page==="Schedule")?"w-full px-2.5 py-2 rounded-lg text-3xl flex flex-row items-center transition bg-[#212936] text-zinc-100":'w-full px-2.5 py-2 rounded-lg text-3xl  flex flex-row items-center transition text-[#9da3ae] hover:bg-[#212936] hover:text-zinc-100'}><CalendarTodayIcon className='mr-3' fontSize='large'/>Schedule</Link>
-                                    {isTutor?<Link href={'/login/'+params.district +'/student/available'} className={(page==="Available")?"mt-3 w-full px-2.5 py-2 rounded-lg text-3xl flex flex-row items-center transition bg-[#212936] text-zinc-100":'mt-3 w-full px-2.5 py-2 rounded-lg text-3xl  flex flex-row items-center transition text-[#9da3ae] hover:bg-[#212936] hover:text-zinc-100'}><PersonAddAltOutlinedIcon className='mr-3' fontSize='large'/>Available</Link>:null}
-                                    <Link href={'/login/'+params.district +'/student/request'} className={(page==="Request")?"mt-3 w-full px-2.5 py-2 rounded-lg text-3xl flex flex-row items-center transition bg-[#212936] text-zinc-100":'mt-3 w-full px-2.5 py-2 rounded-lg text-3xl  flex flex-row items-center transition text-[#9da3ae] hover:bg-[#212936] hover:text-zinc-100'}><AddIcon className='mr-3' fontSize='large'/>Request</Link>
-                                    <Link href={'/login/'+params.district +'/student/settings'} className={(page==="Settings")?"mt-3 w-full px-2.5 py-2 rounded-lg text-3xl flex flex-row items-center transition bg-[#212936] text-zinc-100":'mt-3 w-full px-2.5 py-2 rounded-lg text-3xl  flex flex-row items-center transition text-[#9da3ae] hover:bg-[#212936] hover:text-zinc-100'}><SettingsIcon className='mr-3' fontSize='large'/>Settings</Link>
-                                </div>
-                                <div className='flex-grow'/>
-                                <Collapse orientation='vertical' in={profilePopover}>
-                                    <div className='w-full h-fit px-8 flex flex-col items-center'>
-                                        <button onClick={signingOut} className='w-full h-fit text-xl text-zinc-100 mb-3 bg-gradient-radial from-[#f17171] to-[#f03030] py-2 rounded-lg'>Sign out</button>
+                                    <div className='w-fit h-fit ml-4 mt-6'>
+                                        <Link href={'/'} className='w-fit h-fit'>
+                                            <Image alt='scholarly-icon' src={'/images/sizedCircularScholarlyIcon.png'} width={60} height={60}/>
+                                        </Link>
                                     </div>
-                                </Collapse>
-                                <div className='w-full h-fit pl-1.5 mb-5 pr-2.5'>
-                                    <button onClick={handleProfilePopover} className='px-2 w-full h-fit text-md transition hover:bg-[#212936] text-zinc-100 flex flex-row items-center py-2 rounded-lg'><Avatar src={auth.currentUser?.photoURL} className='mr-3'/>{auth.currentUser?.displayName}</button>
+                                    <div className='w-full h-fit mt-9 pl-2 pr-4'>
+                                        <Link href={'/login/'+params.district +'/student/schedule'} className={(page==="Schedule")?"w-full px-2.5 py-2 rounded-lg text-3xl flex flex-row items-center transition bg-[#212936] text-zinc-100":'w-full px-2.5 py-2 rounded-lg text-3xl  flex flex-row items-center transition text-[#9da3ae] hover:bg-[#212936] hover:text-zinc-100'}><CalendarTodayIcon className='mr-3' fontSize='large'/>Schedule</Link>
+                                        {isTutor?<Link href={'/login/'+params.district +'/student/available'} className={(page==="Available")?"mt-3 w-full px-2.5 py-2 rounded-lg text-3xl flex flex-row items-center transition bg-[#212936] text-zinc-100":'mt-3 w-full px-2.5 py-2 rounded-lg text-3xl  flex flex-row items-center transition text-[#9da3ae] hover:bg-[#212936] hover:text-zinc-100'}><PersonAddAltOutlinedIcon className='mr-3' fontSize='large'/>Available</Link>:null}
+                                        <Link href={'/login/'+params.district +'/student/request'} className={(page==="Request")?"mt-3 w-full px-2.5 py-2 rounded-lg text-3xl flex flex-row items-center transition bg-[#212936] text-zinc-100":'mt-3 w-full px-2.5 py-2 rounded-lg text-3xl  flex flex-row items-center transition text-[#9da3ae] hover:bg-[#212936] hover:text-zinc-100'}><AddIcon className='mr-3' fontSize='large'/>Request</Link>
+                                        <Link href={'/login/'+params.district +'/student/settings'} className={(page==="Settings")?"mt-3 w-full px-2.5 py-2 rounded-lg text-3xl flex flex-row items-center transition bg-[#212936] text-zinc-100":'mt-3 w-full px-2.5 py-2 rounded-lg text-3xl  flex flex-row items-center transition text-[#9da3ae] hover:bg-[#212936] hover:text-zinc-100'}><SettingsIcon className='mr-3' fontSize='large'/>Settings</Link>
+                                    </div>
+                                    <div className='flex-grow'/>
+                                    <Collapse orientation='vertical' in={profilePopover}>
+                                        <div className='w-full h-fit px-8 flex flex-col items-center'>
+                                            <button onClick={signingOut} className='w-full h-fit text-xl text-zinc-100 mb-3 bg-gradient-radial from-[#f17171] to-[#f03030] py-2 rounded-lg'>Sign out</button>
+                                        </div>
+                                    </Collapse>
+                                    <div className='w-full h-fit pl-1.5 mb-5 pr-2.5'>
+                                        <button onClick={handleProfilePopover} className='px-2 w-full h-fit text-md transition hover:bg-[#212936] text-zinc-100 flex flex-row items-center py-2 rounded-lg'><Avatar src={auth.currentUser?.photoURL} className='mr-3'/>{auth.currentUser?.displayName}</button>
+                                    </div>
                                 </div>
-                            </div>
-                                </Collapse>
-                                <button onClick={closeMobileNav} className='flex-grow cursor-default relative'>
-                                    <button onClick={closeMobileNav} className='w-fit h-fit absolute left-3 top-3 p-2 rounded-full'>
-                                        <CloseIcon fontSize='large'/>
+                            </Collapse>
+                            :
+                            <>
+                                {menu?<Modal open={menu} onClose={closeMobileNav}>
+                                    <div className='flex flex-row w-screen h-screen'>
+                                    <Collapse in={mobileCollapse} orientation='horizontal'>
+                                    <div className='w-72 h-screen bg-[#121820] flex flex-col rounded-lg shadow-lg shadow-slate-200'>
+                                    <div className='w-fit h-fit ml-4 mt-6'>
+                                        <Link href={'/'} className='w-fit h-fit'>
+                                            <Image alt='scholarly-icon' src={'/images/sizedCircularScholarlyIcon.png'} width={60} height={60}/>
+                                        </Link>
+                                    </div>
+                                    <div className='w-full h-fit mt-9 pl-2 pr-4'>
+                                        <Link href={'/login/'+params.district +'/student/schedule'} className={(page==="Schedule")?"w-full px-2.5 py-2 rounded-lg text-3xl flex flex-row items-center transition bg-[#212936] text-zinc-100":'w-full px-2.5 py-2 rounded-lg text-3xl  flex flex-row items-center transition text-[#9da3ae] hover:bg-[#212936] hover:text-zinc-100'}><CalendarTodayIcon className='mr-3' fontSize='large'/>Schedule</Link>
+                                        {isTutor?<Link href={'/login/'+params.district +'/student/available'} className={(page==="Available")?"mt-3 w-full px-2.5 py-2 rounded-lg text-3xl flex flex-row items-center transition bg-[#212936] text-zinc-100":'mt-3 w-full px-2.5 py-2 rounded-lg text-3xl  flex flex-row items-center transition text-[#9da3ae] hover:bg-[#212936] hover:text-zinc-100'}><PersonAddAltOutlinedIcon className='mr-3' fontSize='large'/>Available</Link>:null}
+                                        <Link href={'/login/'+params.district +'/student/request'} className={(page==="Request")?"mt-3 w-full px-2.5 py-2 rounded-lg text-3xl flex flex-row items-center transition bg-[#212936] text-zinc-100":'mt-3 w-full px-2.5 py-2 rounded-lg text-3xl  flex flex-row items-center transition text-[#9da3ae] hover:bg-[#212936] hover:text-zinc-100'}><AddIcon className='mr-3' fontSize='large'/>Request</Link>
+                                        <Link href={'/login/'+params.district +'/student/settings'} className={(page==="Settings")?"mt-3 w-full px-2.5 py-2 rounded-lg text-3xl flex flex-row items-center transition bg-[#212936] text-zinc-100":'mt-3 w-full px-2.5 py-2 rounded-lg text-3xl  flex flex-row items-center transition text-[#9da3ae] hover:bg-[#212936] hover:text-zinc-100'}><SettingsIcon className='mr-3' fontSize='large'/>Settings</Link>
+                                    </div>
+                                    <div className='flex-grow'/>
+                                    <Collapse orientation='vertical' in={profilePopover}>
+                                        <div className='w-full h-fit px-8 flex flex-col items-center'>
+                                            <button onClick={signingOut} className='w-full h-fit text-xl text-zinc-100 mb-3 bg-gradient-radial from-[#f17171] to-[#f03030] py-2 rounded-lg'>Sign out</button>
+                                        </div>
+                                    </Collapse>
+                                    <div className='w-full h-fit pl-1.5 mb-5 pr-2.5'>
+                                        <button onClick={handleProfilePopover} className='px-2 w-full h-fit text-md transition hover:bg-[#212936] text-zinc-100 flex flex-row items-center py-2 rounded-lg'><Avatar src={auth.currentUser?.photoURL} className='mr-3'/>{auth.currentUser?.displayName}</button>
+                                    </div>
+                                </div>
+                                    </Collapse>
+                                    <button onClick={closeMobileNav} className='flex-grow cursor-default relative'>
+                                        <button onClick={closeMobileNav} className='w-fit h-fit absolute left-3 top-3 p-2 rounded-full'>
+                                            <CloseIcon fontSize='large'/>
+                                        </button>
                                     </button>
-                                </button>
-                                </div>
-                            </Modal>:null}
-                        </>
-                    }
+                                    </div>
+                                </Modal>:null}
+                            </>
+                        }
+                    </div>
+                    <div className='h-screen max-h-screen overflow-y-scroll flex flex-grow flex-col items-center'>
+                        {children}
+                    </div>
                 </div>
-                <div className='h-screen max-h-screen overflow-y-scroll flex flex-grow flex-col items-center'>
-                    {children}
-                </div>
+                {(errorDisplay != false)?<Alert className='absolute right-1.5 lg:right-6 top-20 lg:top-3'  severity='error'>{errorDisplay}</Alert>:null}
+                <Dialog open={((auth.currentUser?.uid == undefined || auth.currentUser?.uid == null))}>
+                    {/* <div className='w-screen h-screen flex flex-col items-center justify-center'> */}
+                        {loading?null:<div className='bg-[#121820] shadow-lg shadow-zinc-300 w-fit h-fit px-10 py-8 flex flex-col items-center'>
+                            <div className='w-fit h-fit p-2 rounded-full bg-red-300'>
+                                <CloseIcon fontSize='large' sx={{color:'red'}}/>
+                            </div>
+                            <h3 className='text-lg font-bold mt-5 text-center'>Not Signed In!</h3>
+                            <h5 className='text-base font-light text-opacity-70 text-center mt-4'>There is no current user signed in on this device. Please make your way back to the homepage 😁</h5>
+                            <Link className='text-lg py-1 w-fit px-6 bg-rose-500 rounded-lg mt-6 transition hover:bg-opacity-80' href={'/'}>Go to home screen</Link>
+                        </div>}
+                    {/* </div> */}
+                </Dialog>
+                <Modal open={loading}>
+                    <div className='w-screen h-screen flex flex-col items-center justify-center'>
+                        <CircularProgress size={130} thickness={1}/>
+                    </div>
+                </Modal>
             </div>
-            <Dialog open={((auth.currentUser?.uid == undefined || auth.currentUser?.uid == null))}>
-                {/* <div className='w-screen h-screen flex flex-col items-center justify-center'> */}
-                    {loading?null:<div className='bg-[#121820] shadow-lg shadow-zinc-300 w-fit h-fit px-10 py-8 flex flex-col items-center'>
-                        <div className='w-fit h-fit p-2 rounded-full bg-red-300'>
-                            <CloseIcon fontSize='large' sx={{color:'red'}}/>
-                        </div>
-                        <h3 className='text-lg font-bold mt-5 text-center'>Not Signed In!</h3>
-                        <h5 className='text-base font-light text-opacity-70 text-center mt-4'>There is no current user signed in on this device. Please make your way back to the homepage 😁</h5>
-                        <Link className='text-lg py-1 w-fit px-6 bg-rose-500 rounded-lg mt-6 transition hover:bg-opacity-80' href={'/'}>Go to home screen</Link>
-                    </div>}
-                {/* </div> */}
-            </Dialog>
-            <Modal open={loading}>
-                <div className='w-screen h-screen flex flex-col items-center justify-center'>
-                    <CircularProgress size={130} thickness={1}/>
-                </div>
-            </Modal>
-        </div>
+        </AlertContext.Provider>
     )
 
     const OldCode = ()=>{

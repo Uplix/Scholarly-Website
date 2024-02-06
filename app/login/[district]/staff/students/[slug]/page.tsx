@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation'
 import { onValue, ref } from 'firebase/database';
 import { db } from '@/firebase/config';
 
-export default function IndivStudent({params}:{params:{slug:string}}){
+export default function IndivStudent({params}:{params:{slug:string, district:string}}){
     const router = useRouter();
     // alert(params.slug)
 

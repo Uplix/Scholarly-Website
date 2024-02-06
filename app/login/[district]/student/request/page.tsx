@@ -7,7 +7,7 @@ import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { db, auth } from '@/firebase/config';
 import { onValue, ref, set, push } from 'firebase/database';
-import { Dialog, FormHelperText } from '@mui/material';
+import { Alert, Dialog, FormHelperText } from '@mui/material';
 import { DateCalendar } from '@mui/x-date-pickers';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import {DemoContainer} from '@mui/x-date-pickers/internals/demo'
@@ -17,6 +17,8 @@ import Box from '@mui/material/Box';
 import {useRouter} from 'next/navigation';
 import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
 import Link from 'next/link';
+
+import { AlertContext } from '../layout';
 
 var moment = require('moment');
 moment().format();
@@ -39,9 +41,12 @@ export default function Page({params}:{params:{district:string}}) {
     const [gradeError, setGradeError] = React.useState(false);
     const [locationError, setLocationError] = React.useState(false);
     const [textError, setTextError] = React.useState('good');
+    const [displayError, setDisplayError] = React.useState('good');
     const [current, setCurrent]:any = React.useState(undefined);
     const [requestSent, setRequestSent] = React.useState(false)
     const router = useRouter();
+
+    const alerter = React.useContext(AlertContext);
 
     React.useEffect(()=>{
         var theRequestSub:any[] = [];
@@ -242,9 +247,11 @@ export default function Page({params}:{params:{district:string}}) {
         if(!(theSubError || theTimeError || theGradeError || theTextError || theDateError || theLocationError)){
             // alert(theSubError + " " + theTimeError + " " +theGradeError +" " + theTextError +" " + theDateError +" " + theLocationError)
             if(current == undefined){
-                alert("Could not fetch your current schedule from server");
+                // setDisplayError("fetch")
+                alerter.setErrorDisplay("Could not fetch your current schedule from server");
             }else if(current.find(checking) != undefined){
-                alert("You already have a session on this day. Try changing the date.");
+                // setDisplayError("doubleBook")
+                alerter.setErrorDisplay("You already have a session on this day. Try changing the date.");
             }else{
                 try{
                     var pushRef = push(ref(db, params.district + '/sessions/' + auth.currentUser?.uid))
@@ -273,6 +280,7 @@ export default function Page({params}:{params:{district:string}}) {
                         tutoree:auth.currentUser?.uid
                     })
                     setRequestSent(true)
+                    alerter.setErrorDisplay(false)
                 }catch(e){
                     alert("An error occured while adding to database: " + e)
                 }
@@ -284,7 +292,8 @@ export default function Page({params}:{params:{district:string}}) {
                 // router.push('/login/'+params.district +'/student/schedule');
             }
         }else{
-            alert("You left one or more prompts blank")
+            alerter.setErrorDisplay("You left one or more prompts blank!")
+            // setDisplayError("blank")
             console.log(theSubError, theTimeError, theTextError, theDateError, theGradeError, theLocationError)
         }
     }
@@ -323,6 +332,7 @@ export default function Page({params}:{params:{district:string}}) {
                 />
             </div>
             <button onClick={submit} className='text-center text-4xl text-slate-50 mt-10 px-3 py-2 bg-gradient-to-br from-emerald-800 to-green-400 rounded-xl transition hover:scale-110 hover:-translate-y-2 hover:opacity-80'>Submit</button>
+            {(displayError != 'good')?<Alert className='' severity='error'>{(displayError == "blank")? ("You left one or moe prompts blank!"):((displayError == "fetch")?"Could not fetch your current schedule from server":((displayError == "doubleBook")?"You already have a session on this day. Try changing the date.":''))}</Alert>:null}
             <Dialog open={requestSent}>
                 <div className='w-fit h-fit bg-[#121820] py-9 px-9 flex flex-col items-center'>
                     <div className='w-fit h-fit p-1 rounded-full bg-emerald-400'>

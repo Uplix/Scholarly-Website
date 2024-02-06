@@ -8,7 +8,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { DeleteOutlineOutlined } from '@mui/icons-material'
 import { useRouter } from 'next/navigation'
 
-export default function SubjectEdit(){
+export default function SubjectEdit({params}:{params:{district:string}}){
     const [subjects, setSubjects]:any[] = React.useState([]);
     const [reload, setReload] = React.useState(0);
     const [addSubjcetButtonColor, setAddSubjcetButtonColor] = React.useState('primary');
@@ -40,7 +40,7 @@ export default function SubjectEdit(){
             theCurrent[subjects[i].subject] = subjects[i].classes.join(',');
        }
        set(ref(db, 'mhusd/requestInfo/subjects/'), theCurrent);
-       router.push('/login/staff/options');
+       router.push('/login/' + params.district + '/staff/options');
     }
 
     const SubjectHead = ({value, index, array}:{value:any, index:number, array:any[]}) => {

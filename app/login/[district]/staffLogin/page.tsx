@@ -8,7 +8,7 @@ import Image from 'next/image';
 import { EmailOutlined, Key } from '@mui/icons-material';
 
 
-export default function StaffLogin(){
+export default function StaffLogin({params}:{params:{district:string}}){
     const [theEmail, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
     const [error, setError] = React.useState(false);
@@ -30,7 +30,7 @@ export default function StaffLogin(){
             try{
                 await signInWithEmailAndPassword(auth, theEmail, password);
                 setLoading(false);
-                router.push('/login/staff/upcomingSessions')
+                router.push('/login/' + params.district + '/staff/upcomingSessions')
             }catch(e:any){
                 alert('Login error: ' + e.message);
                 setError(true);

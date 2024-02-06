@@ -9,7 +9,7 @@ import { DataGrid, GridColDef, GridEventListener, GridRenderCellParams } from '@
 import {CircularProgress} from '@mui/material'
 import { useRouter } from 'next/navigation'
 
-export default function Students(){
+export default function Students({params}:{params:{district:string}}){
     const [letter, setLetter] = React.useState('a');
     const [students, setStudents]:any[] = React.useState([]);
     const [search, setSearch] = React.useState('');
@@ -127,7 +127,7 @@ export default function Students(){
     }
 
     const studentClicked:GridEventListener<'rowDoubleClick'> = (params, event, details) =>{
-        router.push('/login/staff/students/' + params.id)
+        router.push('/login/' + params.district + '/staff/students/' + params.id)
     }
 
     return(
