@@ -27,7 +27,7 @@ export default function StudentLayout({
 
     const [errorDisplay, setErrorDisplay] = React.useState<boolean|string>(false);
 
-    const [windowWidth, setWindowWidth] = React.useState<number>((window != undefined)? window.innerWidth:0)
+    const [windowWidth, setWindowWidth] = React.useState<number>(1200)
     const [loadingAvatar, setLoadingAvatar] = React.useState(true);
     const [menu, setMenu] = React.useState(false);
     const [menuClassName, setMenuClassName] = React.useState('absolute left-0 top-0 flex flex-col w-96 min-h-screen h-fit bg-gradient-to-b from-emerald-500 to-indigo-400 animate-fade-right ease-in');
@@ -99,6 +99,9 @@ export default function StudentLayout({
 
     React.useEffect(()=>{
         setTimeout(()=>{
+            setWindowWidth(window.innerWidth);
+        }, 100)
+        setTimeout(()=>{
             setLoadingAvatar(false);
         }, 700)
     }, [])
@@ -153,7 +156,7 @@ export default function StudentLayout({
                         <CircularProgress />
                     </div>:
                     <div className="scale-125 rounded-full mr-12 border-2 border-slate-100">
-                        <Avatar sx={{bgcolor:stringToColor(auth.currentUser?.displayName)}}>{(auth.currentUser == undefined || auth.currentUser == null)?'NA':auth.currentUser?.displayName?.charAt(0) + auth.currentUser?.displayName?.split(' ')[1].charAt(0)}</Avatar>
+                        <Avatar sx={{bgcolor:stringToColor(auth.currentUser?.displayName)}}>{(auth.currentUser?.displayName == undefined || auth.currentUser?.displayName == null)?'NA':auth.currentUser?.displayName?.charAt(0) + auth.currentUser?.displayName?.split(' ')[1].charAt(0)}</Avatar>
                     </div>}
                 </div>
                 <div>{children}</div>
@@ -189,11 +192,11 @@ export default function StudentLayout({
                                 </Link>
                             </div>
                             <div className='w-full h-fit mt-9 pl-2 pr-4'>
-                                <Link href={'/login/'+params.district +'/staff/upcomingSessions'} className={(page==="UpcomingSessions")?"w-full px-2.5 py-2 rounded-lg text-3xl flex flex-row items-center transition bg-[#212936] text-zinc-100":'w-full px-2.5 py-2 rounded-lg text-3xl  flex flex-row items-center transition text-[#9da3ae] hover:bg-[#212936] hover:text-zinc-100'}><CalendarTodayOutlinedIcon className='mr-3' fontSize='large'/>Sessions</Link>
+                                <Link href={'/login/'+params.district +'/staff/sessions'} className={(page==="Sessions")?"w-full px-2.5 py-2 rounded-lg text-3xl flex flex-row items-center transition bg-[#212936] text-zinc-100":'w-full px-2.5 py-2 rounded-lg text-3xl  flex flex-row items-center transition text-[#9da3ae] hover:bg-[#212936] hover:text-zinc-100'}><CalendarTodayOutlinedIcon className='mr-3' fontSize='large'/>Sessions</Link>
                                 <Link href={'/login/'+params.district +'/staff/students'} className={(page==="Students")?"mt-3 w-full px-2.5 py-2 rounded-lg text-3xl flex flex-row items-center transition bg-[#212936] text-zinc-100":'mt-3 w-full px-2.5 py-2 rounded-lg text-3xl  flex flex-row items-center transition text-[#9da3ae] hover:bg-[#212936] hover:text-zinc-100'}><GroupsOutlinedIcon className='mr-3' fontSize='large'/>Students</Link>
                                 {/* {isTutor?<Link href={'/login/'+params.district +'/student/available'} className={(page==="Available")?"mt-3 w-full px-2.5 py-2 rounded-lg text-3xl flex flex-row items-center transition bg-[#212936] text-zinc-100":'mt-3 w-full px-2.5 py-2 rounded-lg text-3xl  flex flex-row items-center transition text-[#9da3ae] hover:bg-[#212936] hover:text-zinc-100'}><PersonAddAltOutlinedIcon className='mr-3' fontSize='large'/>Available</Link>:null} */}
-                                <Link href={'/login/'+params.district +'/staff/reports'} className={(page==="Request")?"mt-3 w-full px-2.5 py-2 rounded-lg text-3xl flex flex-row items-center transition bg-[#212936] text-zinc-100":'mt-3 w-full px-2.5 py-2 rounded-lg text-3xl  flex flex-row items-center transition text-[#9da3ae] hover:bg-[#212936] hover:text-zinc-100'}><OutlinedFlagOutlinedIcon className='mr-3' fontSize='large'/>Reports</Link>
-                                <Link href={'/login/'+params.district +'/staff/options'} className={(page==="Settings")?"mt-3 w-full px-2.5 py-2 rounded-lg text-3xl flex flex-row items-center transition bg-[#212936] text-zinc-100":'mt-3 w-full px-2.5 py-2 rounded-lg text-3xl  flex flex-row items-center transition text-[#9da3ae] hover:bg-[#212936] hover:text-zinc-100'}><TuneOutlinedIcon className='mr-3' fontSize='large'/>Options</Link>
+                                <Link href={'/login/'+params.district +'/staff/reports'} className={(page==="Reports")?"mt-3 w-full px-2.5 py-2 rounded-lg text-3xl flex flex-row items-center transition bg-[#212936] text-zinc-100":'mt-3 w-full px-2.5 py-2 rounded-lg text-3xl  flex flex-row items-center transition text-[#9da3ae] hover:bg-[#212936] hover:text-zinc-100'}><OutlinedFlagOutlinedIcon className='mr-3' fontSize='large'/>Reports</Link>
+                                <Link href={'/login/'+params.district +'/staff/options'} className={(page==="Options")?"mt-3 w-full px-2.5 py-2 rounded-lg text-3xl flex flex-row items-center transition bg-[#212936] text-zinc-100":'mt-3 w-full px-2.5 py-2 rounded-lg text-3xl  flex flex-row items-center transition text-[#9da3ae] hover:bg-[#212936] hover:text-zinc-100'}><TuneOutlinedIcon className='mr-3' fontSize='large'/>Options</Link>
                             </div>
                             <div className='flex-grow'/>
                             <Collapse orientation='vertical' in={profilePopover}>
@@ -218,7 +221,7 @@ export default function StudentLayout({
                                 </Link>
                             </div>
                             <div className='w-full h-fit mt-9 pl-2 pr-4'>
-                                <Link href={'/login/'+params.district +'/staff/upcomingSessions'} className={(page==="UpcomingSessions")?"w-full px-2.5 py-2 rounded-lg text-3xl flex flex-row items-center transition bg-[#212936] text-zinc-100":'w-full px-2.5 py-2 rounded-lg text-3xl  flex flex-row items-center transition text-[#9da3ae] hover:bg-[#212936] hover:text-zinc-100'}><CalendarTodayOutlinedIcon className='mr-3' fontSize='large'/>Sessions</Link>
+                            <Link href={'/login/'+params.district +'/staff/sessions'} className={(page==="Sessions")?"w-full px-2.5 py-2 rounded-lg text-3xl flex flex-row items-center transition bg-[#212936] text-zinc-100":'w-full px-2.5 py-2 rounded-lg text-3xl  flex flex-row items-center transition text-[#9da3ae] hover:bg-[#212936] hover:text-zinc-100'}><CalendarTodayOutlinedIcon className='mr-3' fontSize='large'/>Sessions</Link>
                                 <Link href={'/login/'+params.district +'/staff/students'} className={(page==="Students")?"mt-3 w-full px-2.5 py-2 rounded-lg text-3xl flex flex-row items-center transition bg-[#212936] text-zinc-100":'mt-3 w-full px-2.5 py-2 rounded-lg text-3xl  flex flex-row items-center transition text-[#9da3ae] hover:bg-[#212936] hover:text-zinc-100'}><GroupsOutlinedIcon className='mr-3' fontSize='large'/>Students</Link>
                                 {/* {isTutor?<Link href={'/login/'+params.district +'/student/available'} className={(page==="Available")?"mt-3 w-full px-2.5 py-2 rounded-lg text-3xl flex flex-row items-center transition bg-[#212936] text-zinc-100":'mt-3 w-full px-2.5 py-2 rounded-lg text-3xl  flex flex-row items-center transition text-[#9da3ae] hover:bg-[#212936] hover:text-zinc-100'}><PersonAddAltOutlinedIcon className='mr-3' fontSize='large'/>Available</Link>:null} */}
                                 <Link href={'/login/'+params.district +'/staff/reports'} className={(page==="Reports")?"mt-3 w-full px-2.5 py-2 rounded-lg text-3xl flex flex-row items-center transition bg-[#212936] text-zinc-100":'mt-3 w-full px-2.5 py-2 rounded-lg text-3xl  flex flex-row items-center transition text-[#9da3ae] hover:bg-[#212936] hover:text-zinc-100'}><OutlinedFlagOutlinedIcon className='mr-3' fontSize='large'/>Reports</Link>
@@ -250,7 +253,7 @@ export default function StudentLayout({
             </div>
         </div>
         {(errorDisplay != false)?<Alert className='absolute right-1.5 lg:right-6 top-20 lg:top-3'  severity='error'>{errorDisplay}</Alert>:null}
-        <Dialog open={((auth.currentUser?.uid == undefined || auth.currentUser?.uid == null))}>
+        <Dialog open={((auth.currentUser?.uid == undefined || auth.currentUser?.uid == null)&&!loadingAvatar)}>
             {/* <div className='w-screen h-screen flex flex-col items-center justify-center'> */}
                 {loading?null:<div className='bg-[#121820] shadow-lg shadow-zinc-300 w-fit h-fit px-10 py-8 flex flex-col items-center'>
                     <div className='w-fit h-fit p-2 rounded-full bg-red-300'>

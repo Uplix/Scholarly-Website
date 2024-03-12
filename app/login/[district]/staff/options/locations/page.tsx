@@ -11,7 +11,7 @@ import { useRouter } from 'next/navigation'
 export default function LocationEdit({params}:{params:{district:string}}){
     const [locations, setLocations]:any[] = React.useState([]);
     const [reload, setReload] = React.useState(0);
-    const [addLocationButtonColor, setAddLocationButtonColor] = React.useState('primary');
+    const [addLocationButtonColor, setAddLocationButtonColor] = React.useState<"inherit" | "error" | "primary" | "secondary" | "info" | "success" | "warning">('primary');
 
     const router = useRouter();
 
@@ -55,7 +55,7 @@ export default function LocationEdit({params}:{params:{district:string}}){
         }
 
         return(
-            <div className='flex flex-row items-end'>
+            <div className='flex flex-row items-end' key={value+index+'help'}>
                 <TextField
                 value={currentValue} onChange={(event)=>setCurrentValue(event.target.value)} onBlur={()=>{
                     let theCurrent = locations;
@@ -78,7 +78,7 @@ export default function LocationEdit({params}:{params:{district:string}}){
                     <Button onClick={publishChanges} color='success' variant='outlined' className='text-2xl ml-6'>Apply Changes</Button>
                 </div>
             <div className='flex flex-col mt-6 gap-y-4'>
-                {locations.map((value:string, index:number)=><Indiv value={value} index={index}/>)}
+                {locations.map((value:string, index:number)=><Indiv key={value+index+'locatIndiv'} value={value} index={index}/>)}
             </div>
         </div>
     )

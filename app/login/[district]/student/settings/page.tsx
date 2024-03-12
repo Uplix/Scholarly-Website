@@ -22,6 +22,7 @@ export default function Settings({params}:{params:{district:string}}){
         numRatings:0,
         rating:0
     });
+    const [user, setUser] = React.useState<any>({});
     const [loading, setLoading] = React.useState(false)
     const router = useRouter();
 
@@ -33,26 +34,34 @@ export default function Settings({params}:{params:{district:string}}){
     }
 
     React.useEffect(()=>{
-        var isATutor = false;
+        let isATutor = false;
+        let theUser:any = {};
         if(auth.currentUser != undefined && auth.currentUser != null){
             onValue(ref(db, params.district + '/users/' + auth.currentUser?.uid + '/isTutor'), (snapshot)=>{
                 if(snapshot.exists() && snapshot.val() === true){
                     isATutor = snapshot.val();
                 }
             })
-            var theRating = 0;
-            var numRatings = 0;
+            let theRating = 0;
+            let numRatings = 0;
             onValue(ref(db, params.district + '/users/' + auth.currentUser?.uid + '/ratings'), (snapshot)=>{
                 snapshot.forEach((child)=>{
                     theRating += child.val();
                     numRatings++;
                 })
             })
+            onValue(ref(db, params.district + '/users/' + auth.currentUser?.uid + '/school'), (snapshot)=>{
+                theUser.school = snapshot.val();
+            })
+            onValue(ref(db, params.district + '/users/' + auth.currentUser?.uid + '/grade'), (snapshot)=>{
+                theUser.grade = snapshot.val();
+            })
             setRating({
                 numRatings:numRatings,
                 rating:theRating
             })
             setIsTutor(isATutor)
+            setUser(theUser);
             // console.log(theRating, numRatings)
             // console.log(isTutor);
         }
@@ -76,31 +85,31 @@ export default function Settings({params}:{params:{district:string}}){
         router.push('/')
     }
     
-    const signingOut = async () =>{
-        setLoading(true)
-        await signOut(auth);
-        // setReload(reload+1);
-        await fullSignOut();
-        // closeModal();
-        router.push('/login');
-    }
+    // const signingOut = async () =>{
+    //     setLoading(true)
+    //     await signOut(auth);
+    //     // setReload(reload+1);
+    //     await fullSignOut();
+    //     // closeModal();
+    //     router.push('/login');
+    // }
 
     // change to request deletion from staff
-    const deleteAccount = async ()=>{
-        await signingOut();
-        closeModal();
-    }
+    // const deleteAccount = async ()=>{
+    //     await signingOut();
+    //     closeModal();
+    // }
 
-    const closeModal = ()=>{
-        setModalClassName('bg-[#1e1e1e] items-center w-96 h-fit flex flex-col animate-jump-out animate-ease-out rounded-2xl')
-        setTimeout(()=>{
-            setSure(null)
-            setModalClassName('bg-[#1e1e1e] items-center w-96 h-fit flex flex-col animate-jump-in animate-ease-in rounded-2xl')
-        }, 500)
-    }
+    // const closeModal = ()=>{
+    //     setModalClassName('bg-[#1e1e1e] items-center w-96 h-fit flex flex-col animate-jump-out animate-ease-out rounded-2xl')
+    //     setTimeout(()=>{
+    //         setSure(null)
+    //         setModalClassName('bg-[#1e1e1e] items-center w-96 h-fit flex flex-col animate-jump-in animate-ease-in rounded-2xl')
+    //     }, 500)
+    // }
 
     return(
-        <div className="flex flex-col w-full h-fit items-center pt-6 pb-10">
+        <div className="flex flex-col w-full h-fit items-center pt-10 pb-10">
             <div className="rounded-full w-fit h-fit animate-jump-in animate-ease-in">
                 {(auth.currentUser == null || auth.currentUser == undefined)? <PersonIcon fontSize='large'/>:<Avatar sx={{width:70, height:70}} alt={"Profile Image"} src={auth.currentUser.photoURL}/>}
             </div>
@@ -110,6 +119,8 @@ export default function Settings({params}:{params:{district:string}}){
                 <ListItem display={"Email: "+auth.currentUser?.email}/>
                 <ListItem display={"User ID: " + auth.currentUser?.uid}/>
                 <ListItem display={'School District: MHUSD'}/>
+                <ListItem display={"School: " + user?.school}/>
+                <ListItem display={"Grade: " + user?.grade}/>
                 <ListItem display={'Currently a tutor: ' + (isTutor?'Yes':'No')}/>
                 <ListItem display={'You have ' + rating.numRatings + ((rating.numRatings == 1)? ' rating':' ratings')}/>
             </div>
@@ -117,7 +128,7 @@ export default function Settings({params}:{params:{district:string}}){
                 <Rating sx={{fontSize:65}} defaultValue={(rating.numRatings == 0)?0:rating.rating/rating.numRatings} precision={0.1} readOnly/>
             </div>            
             {/* <button onClick={()=>setSure({text:"Are you sure you want to sign out?", click:signingOut, fix:true, state:'open'})} className="text-center p-3 items-center font-light rounded-2xl text-3xl mt-12 bg-gradient-to-br from-rose-700 to-red-500 w-fit h-fit transition hover:scale-110 hover:-translate-y-2 hover:opacity-80">Sign Out</button> */}
-            <button onClick={()=>setSure({text:"Are you sure you want to delete your account?", click:deleteAccount, fix:false, state:'open'})} className="text-center p-3 items-center font-light rounded-2xl text-3xl mt-12 bg-gradient-to-br from-rose-700 to-red-500 w-fit h-fit transition hover:scale-110 hover:-translate-y-2 hover:opacity-80">Delete Account</button>
+            {/* <button onClick={()=>setSure({text:"Are you sure you want to delete your account?", click:deleteAccount, fix:false, state:'open'})} className="text-center p-3 items-center font-light rounded-2xl text-3xl mt-12 bg-gradient-to-br from-rose-700 to-red-500 w-fit h-fit transition hover:scale-110 hover:-translate-y-2 hover:opacity-80">Delete Account</button>
             {(sure!=null)?<Modal open onClose={closeModal}>
                 <div className="flex w-full h-full justify-center items-center">
                     <div className={modalClassName}>
@@ -127,7 +138,7 @@ export default function Settings({params}:{params:{district:string}}){
                         <button onClick={closeModal} className='absolute right-4 top-4 transition hover:scale-110 hover:-translate-y-1'><CloseIcon fontSize='large'/></button>
                     </div>
                 </div>
-            </Modal>:null}
+            </Modal>:null} */}
             {loading?<Backdrop open={loading}>
                 <CircularProgress size={120} thickness={1.5}/>
             </Backdrop>:null}

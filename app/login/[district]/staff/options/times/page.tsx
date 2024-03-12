@@ -80,7 +80,7 @@ export default function TimeEdit({params}:{params:{district:string}}){
 
         return(
             <>
-                <div>
+                <div key={display+'timeHead'}>
                     <div className='flex flex-row justify-start'>
                         {/* <TextField error={textError} value={currentValue} onChange={(event)=>setCurrentValue(event.target.value)} onBlur={()=>{
                             times[value] = currentValue;
@@ -95,7 +95,7 @@ export default function TimeEdit({params}:{params:{district:string}}){
                         </button> */}
                     </div>
                     <div className='flex flex-col ml-6'>
-                        {times[value].map((theValue:string, theIndex:number)=><IndivClasses value={theValue} index={theIndex}  bigIndex={value}/>)}
+                        {times[value].map((theValue:string, theIndex:number)=><IndivClasses key={theValue+theIndex+'indivTime'} value={theValue} index={theIndex}  bigIndex={value}/>)}
                     </div>
                 </div>
                 {/* <Modal className='self-center' onClose={()=>setModal(false)} open={modal}>
@@ -121,7 +121,7 @@ export default function TimeEdit({params}:{params:{district:string}}){
             setTimes({...theCurrent});
         }
         return(
-            <div className='flex flex-row items-end'>
+            <div key={value+index+'timeIndiv'} className='flex flex-row items-end'>
                 <div className='flex flex-col items-start'>
                     <div className='w-0.5 h-16 bg-gray-700 bg-opacity-60'/>
                     <div className='w-14 h-0.5 bg-gray-700 bg-opacity-60'/>
@@ -142,7 +142,7 @@ export default function TimeEdit({params}:{params:{district:string}}){
     }
 
     return(
-        <div className="flex flex-col w-full h-full items-center pb-12">
+        <div className="flex flex-col w-full h-fit items-center pb-12">
             <text className='text-5xl text-slate-100 font-semibold mt-10'>Edit Times</text>
             <div className="flex flex-col w-full h-full mt-12 items-center">
                 <div className='flex flex-row w-full h-fit justify-center px-12 flex-wrap gap-y-5'>

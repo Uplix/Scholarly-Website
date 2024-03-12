@@ -11,12 +11,12 @@ export default function ErrorPage(){
 
     return(
         <div className="flex flex-col w-screen h-fit items-center py-8">
-            <Image alt={'scholarly-icon'} src={'/images/sizedCircularScholarlyIcon.png'} width={80} height={80}/>
+            <Image alt={"scholarly-icon"} src={'/images/sizedCircularScholarlyIcon.png'} width={80} height={80}/>
             <h3 className="text-4xl bg-gradient-to-br from-violet-400 via-sky-400 to-emerald-400 bg-clip-text text-transparent mt-5 text-center">404</h3>
-            <h2 className="text-5xl font-light mt-2 text-center px-7">This page doesn't exist</h2>
-            <h5 className="text-xl opacity-80 font-thin mt-2 text-center px-4">Sorry we couldn't find the page you are looking for</h5>
+            <h2 className="text-5xl font-light mt-2 text-center px-7">{"This page doesn't exist"}</h2>
+            <h5 className="text-xl opacity-80 font-thin mt-2 text-center px-4">{"Sorry we couldn't find the page you are looking for"}</h5>
             <div className="flex flex-col w-full max-w-xl h-fit px-8">
-                <Link href={'/go/about'} className="flex flex-row items-start justify-start mt-12 pb-5 transition hover:translate-x-2.5">
+                <Link href={"/go/about"} className="flex flex-row items-start justify-start mt-12 pb-5 transition hover:translate-x-2.5">
                     <div className="p-0.5 border-2 border-zinc-400 rounded-md mt-1">
                         <ArticleIcon fontSize="large"/>
                     </div>
@@ -28,7 +28,7 @@ export default function ErrorPage(){
                     <KeyboardArrowRightIcon className="self-center" fontSize="large"/>
                 </Link>
                 <div className="w-full h-0.5 bg-zinc-400 bg-opacity-20"/>
-                <Link href={'/go/contact'} className="flex flex-row items-start justify-start py-5 transition hover:translate-x-2.5">
+                <Link href={"/go/contact"} className="flex flex-row items-start justify-start py-5 transition hover:translate-x-2.5">
                     <div className="p-0.5 border-2 border-zinc-400 rounded-md mt-1">
                         <ConnectWithoutContactIcon fontSize="large"/>
                     </div>
@@ -40,7 +40,7 @@ export default function ErrorPage(){
                     <KeyboardArrowRightIcon className="self-center" fontSize="large"/>
                 </Link>
                 <div className="w-full h-0.5 bg-zinc-400 bg-opacity-20"/>
-                <Link href={'/go/team'} className="flex flex-row items-start justify-start py-5 transition hover:translate-x-2.5">
+                <Link href={"/go/team"} className="flex flex-row items-start justify-start py-5 transition hover:translate-x-2.5">
                     <div className="p-0.5 border-2 border-zinc-400 rounded-md mt-1">
                         <GroupsIcon fontSize="large"/>
                     </div>
@@ -52,7 +52,7 @@ export default function ErrorPage(){
                     <KeyboardArrowRightIcon className="self-center" fontSize="large"/>
                 </Link>
                 <div className="w-full h-0.5 bg-zinc-400 bg-opacity-20"/>
-                <Link href={'/login'} className="flex flex-row items-start justify-start py-5 transition hover:translate-x-2.5">
+                <Link href={"/login"} className="flex flex-row items-start justify-start py-5 transition hover:translate-x-2.5">
                     <div className="p-0.5 border-2 border-zinc-400 rounded-md mt-1">
                         <LoginIcon fontSize="large"/>
                     </div>
@@ -64,7 +64,7 @@ export default function ErrorPage(){
                     <KeyboardArrowRightIcon className="self-center" fontSize="large"/>
                 </Link>
                 <div className="w-full h-0.5 bg-zinc-400 bg-opacity-20"/>
-                <Link href={'/'} className="flex flex-row self-center w-fit h-fit mt-5 transition hover:-translate-x-3 items-center justify-center mb-3">
+                <Link href={"/"} className="flex flex-row self-center w-fit h-fit mt-5 transition hover:-translate-x-3 items-center justify-center mb-3">
                     <KeyboardBackspaceIcon fontSize="medium"/>
                     <h5 className="text-xl ml-2 bg-gradient-to-tr text-clip text-transparent bg-clip-text from-lime-400 via-teal-400 to-sky-400">Back to home</h5>
                 </Link>

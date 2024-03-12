@@ -1,17 +1,23 @@
 'use client'
 import Link from 'next/link'
 import {auth} from '@/firebase/config'
+import { signOut } from 'firebase/auth'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import StudentIcon from '@/components/studentdesk.svg'
 import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
 import ChildCareIcon from '@mui/icons-material/ChildCare';
+import { useSession } from 'next-auth/react'
+import { signOut as fullSignOut } from 'next-auth/react'
 
 export default function Home({params}:{params:{district:string}}) {
     const router = useRouter();
+    const session = useSession();
 
-    const studentLogin = () =>{
-        if(auth.currentUser != undefined && auth.currentUser != null){
+    const studentLogin = async () =>{
+        if(session.status != "authenticated"){
+            router.push('/login/'+params.district +'/studentLogin');
+        }else if(auth.currentUser != undefined && auth.currentUser != null){
             router.push('/login/'+params.district +'/student/schedule');
         }else{
             router.push('/login/' + params.district + '/studentLogin')

@@ -17,8 +17,14 @@ import ImageScroller from '@/components/imageScroll';
 
 
 export default function Home() {
-    const [windows, setWindows] = useState<number>((window != undefined)? window.innerWidth:0);
+    const [windows, setWindows] = useState<number>(1200);
     const [arrowOpen, setArrowOpen] = useState(false);
+
+    useEffect(()=>{
+        setTimeout(()=>{
+            setWindows(window.innerWidth);
+        }, 100)
+    }, [])
 
     useEffect(()=> {
         window.addEventListener('resize', ()=> {
@@ -66,7 +72,7 @@ export default function Home() {
                 </div>
                 {/* <div className='flex-grow'/> */}
                 <div className='flex overflow-hidden lg:overflow-visible max-h-96 xl:h-auto flex-col items-center lg:items-end justify-center w-full lg:w-2/5 lg:max-h-screen relative'>
-                    <img className='w-full h-full object-cover'  src='/images/homePageImage.jpeg'/>
+                    <Image width={500} height={500} className='w-full h-full object-cover'  src='/images/homePageImage.jpeg' alt='homepageimage'/>
                 </div>
             </div>
             <div className='flex flex-col items-center px-12 w-full h-fit'>
@@ -95,7 +101,7 @@ export default function Home() {
                             <PeopleOutlineIcon fontSize='large'/>
                         </div>
                         <h5 className='text-2xl mt-4'>Flexibility</h5>
-                        <h6 className='text-lg opacity-70 mt-1.5'>Current peer tutoring structures aren't flexible for the complicated lives of their students. Students that need to take the bus or work after school don't have the ability to participate. Scholarly allows students the option to have an online session with a tutor. Some students only need help a few times throughout the year, but peer tutoring clubs require active participation. Scholarly makes peer tutoring easily accessible in any case.</h6>
+                        <h6 className='text-lg opacity-70 mt-1.5'>{"Current peer tutoring structures aren't flexible for the complicated lives of their students. Students that need to take the bus or work after school don't have the ability to participate. Scholarly allows students the option to have an online session with a tutor. Some students only need help a few times throughout the year, but peer tutoring clubs require active participation. Scholarly makes peer tutoring easily accessible in any case."}</h6>
                     </div>
                 </div>
             </div>
@@ -118,7 +124,7 @@ export default function Home() {
                             Student Request
                             </AccordionSummary>
                             <AccordionDetails sx={{textAlign:'center', fontSize:18}}>
-                            A student posts a request with their: Class, Grade, Date and Time to meet, and Location if it's a physical request.
+                           {" A student posts a request with their: Class, Grade, Date and Time to meet, and Location if it's a physical request."}
                             </AccordionDetails>
                         </Accordion>
                     </div>
@@ -138,7 +144,7 @@ export default function Home() {
                             Peer Tutor Accepts
                             </AccordionSummary>
                             <AccordionDetails sx={{textAlign:'center', fontSize:18}}>
-                            Your district's verified peer tutors can see the request and choose to accept it if they are confident in that subject and are available at that date/time.
+                            {"Your district's verified peer tutors can see the request and choose to accept it if they are confident in that subject and are available at that date/time."}
                             </AccordionDetails>
                         </Accordion>
                     </div>
