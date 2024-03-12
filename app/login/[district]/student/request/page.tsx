@@ -56,6 +56,7 @@ export default function Page({params}:{params:{district:string}}) {
         }
         var theRequestGrade:any[] = [];
         var theRequestLocation:any[] = [];
+        let theGrade:number = 0;
         onValue(ref(db, params.district + "/requestInfo/"), (snapshot)=>{
             snapshot.child('subjects').forEach((child)=>{
                 theRequestSub.push({
@@ -78,11 +79,17 @@ export default function Page({params}:{params:{district:string}}) {
                 currentDates.push(child.child('date').val())
             })
         })
-        setCurrent(currentDates);
-        setRequestSub(theRequestSub);
-        setRequestTime(theRequestTime)
-        setRequestGrades(theRequestGrade);
-        setRequestLocations(theRequestLocation);
+        onValue(ref(db, params.district+'/users/'+auth.currentUser?.uid +'/grade'), (snapshot)=>{
+            theGrade = snapshot.val();
+        })
+        setTimeout(()=>{
+            setCurrent(currentDates);
+            setRequestSub(theRequestSub);
+            setRequestTime(theRequestTime)
+            setRequestGrades(theRequestGrade);
+            setRequestLocations(theRequestLocation);
+            setSelectedGrade(theGrade);
+        }, 300)
     }, [reload])
 
     React.useEffect(()=>{
@@ -101,7 +108,7 @@ export default function Page({params}:{params:{district:string}}) {
                 <Select native defaultValue="" id='subject-select' label={(selectedSub == "")? "Subject":selectedSub} onChange={handleChange}>
                     <option aria-label="None" value="" />
                     {requestSub.map((object:{subj:string, classes:any[]})=>(
-                        <optgroup label={object.subj}>
+                        <optgroup key={object.subj + 'optgroup'} label={object.subj}>
                             {object.classes.map((object2)=>(<option key={object.subj+object2} value={object2}>{object2}</option>))}
                         </optgroup>
                     ))}
@@ -158,22 +165,22 @@ export default function Page({params}:{params:{district:string}}) {
         )
     }
 
-    const Grading = () =>{
-        const handleChange = (event:SelectChangeEvent) =>{
-            setSelectedGrade(event.target.value as string);
-        }
+    // const Grading = () =>{
+    //     const handleChange = (event:SelectChangeEvent) =>{
+    //         setSelectedGrade(event.target.value as string);
+    //     }
 
-        return(
-            <FormControl error={gradeError} sx={{m:1, minWidth:250}}>
-                <InputLabel htmlFor="grade-select">{(selectedGrade == "")? "Grade":"Grade: "+selectedGrade}</InputLabel>
-                <Select native defaultValue="" id='grade-select' label={(selectedGrade == "")?"Grade":"Grade: "+selectedGrade} onChange={handleChange}>
-                <option aria-label='None' value=""/>
-                {requestGrades.map((object:number)=>(<option key={object} value={object}>{"Grade: "+object}</option>))}
-                </Select>
-                <FormHelperText>Your current grade</FormHelperText>
-            </FormControl>
-        )
-    }
+    //     return(
+    //         <FormControl error={gradeError} sx={{m:1, minWidth:250}}>
+    //             <InputLabel htmlFor="grade-select">{(selectedGrade == "")? "Grade":"Grade: "+selectedGrade}</InputLabel>
+    //             <Select native defaultValue="" id='grade-select' label={(selectedGrade == "")?"Grade":"Grade: "+selectedGrade} onChange={handleChange}>
+    //             <option aria-label='None' value=""/>
+    //             {requestGrades.map((object:number)=>(<option key={object} value={object}>{"Grade: "+object}</option>))}
+    //             </Select>
+    //             <FormHelperText>Your current grade</FormHelperText>
+    //         </FormControl>
+    //     )
+    // }
 
     const Dating = () =>{
         return(
@@ -281,6 +288,7 @@ export default function Page({params}:{params:{district:string}}) {
                     })
                     setRequestSent(true)
                     alerter.setErrorDisplay(false)
+                    alerter.setSuccessDisplay("Successfully Posted!")
                 }catch(e){
                     alert("An error occured while adding to database: " + e)
                 }
@@ -306,14 +314,12 @@ export default function Page({params}:{params:{district:string}}) {
                     <Subjecting />
                 </div>
                 <div className='animate-jump-in ease-in'>
-                    <Grading />
-                </div>
-            </div>
-            <div className='flex flex-wrap flex-row gap-x-20 gap-y-10 justify-center mt-10 mx-20'>
-                <div className='animate-jump-in ease-in'>
                     <Timing />
                 </div>
-               {physcial?<div className='animate-jump-in ease-in'>
+            </div>
+            <div className='flex flex-wrap flex-row gap-x-20 gap-y-10 justify-center mx-20'>
+                
+               {physcial?<div className='animate-jump-in ease-in mt-10'>
                     <Location />
                 </div>:null}
             </div>
@@ -327,6 +333,11 @@ export default function Page({params}:{params:{district:string}}) {
                     autoComplete='off'
                     id='extra-text' 
                     label="Description"
+                    onKeyDown={(event)=>{
+                        if(event.code == "Enter"){
+                            submit();
+                        }
+                    }}
                     helperText={(textError == 'long')?"Must be shorter that 80 characters":"Must be at least 10 characters. Hopefully more :)"}
                     onChange={(event:React.ChangeEvent<HTMLInputElement>)=>{setText(event.target.value)}}
                 />

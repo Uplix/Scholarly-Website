@@ -106,7 +106,7 @@ export default function Options({params}:{params:{district:string}}){
                                                 defaultExpandIcon={<ChevronRightIcon />}
                                                 // expanded={expanded}
                                             >
-                                                {classes.map((item:{subj:string, classes:string[]})=>(<TreeItem nodeId={item.subj} label={item.subj}>{item.classes.map((classer:string)=>(<TreeItem nodeId={item.subj + classer} label={classer}/>))}</TreeItem>))}
+                                                {classes.map((item:{subj:string, classes:string[]})=>(<TreeItem key={item.subj+'classHead'} nodeId={item.subj} label={item.subj}>{item.classes.map((classer:string)=>(<TreeItem key={item.subj+classer} nodeId={item.subj + classer} label={classer}/>))}</TreeItem>))}
                                             </TreeView>
                                         </Box>
                                     </Container>
@@ -135,10 +135,10 @@ export default function Options({params}:{params:{district:string}}){
                                                 // expanded={expanded}
                                             >
                                                 <TreeItem nodeId='virtual' label='Virtual'>
-                                                    {times.virtual.map((timed:string)=>(<TreeItem nodeId={'virtual' + timed} label={timed} />))}
+                                                    {times.virtual.map((timed:string)=>(<TreeItem key={'virtual'+timed} nodeId={'virtual' + timed} label={timed} />))}
                                                 </TreeItem>
                                                 <TreeItem nodeId='physical' label='Physical'>
-                                                    {times.physical.map((timed:string)=>(<TreeItem nodeId={'physical' + timed} label={timed} />))}
+                                                    {times.physical.map((timed:string)=>(<TreeItem key={'physical'+timed} nodeId={'physical' + timed} label={timed} />))}
                                                 </TreeItem>
                                             </TreeView>
                                         </Box>
@@ -157,7 +157,7 @@ export default function Options({params}:{params:{district:string}}){
                                 <Link href={'/login/' + params.district + '/staff/options/locations'} className='mr-5 mt-5 transition delay-150 hover:scale-110 hover:-translate-y-1'><EditIcon fontSize='large'/></Link>
                             </div>
                             <div className='flex flex-col items-start w-full h-fit mt-12 ml-10 gap-y-2'>
-                                {locations.map((location:string)=>(<text className='text-2xl text-slate-50'>{"-   " + location}</text>))}
+                                {locations.map((location:string)=>(<text key={location+'location'} className='text-2xl text-slate-50'>{"-   " + location}</text>))}
                             </div>
                         </div>
                     </div>
@@ -167,7 +167,7 @@ export default function Options({params}:{params:{district:string}}){
                 <text className='text-4xl'>Grades</text>
                 <div className='mt-3 py-6 px-9 h-fit w-fit max-w-5xl bg-gradient-to-br from-yellow-200 to-yellow-600 overflow-auto rounded-lg'>
                     <div className='flex flex-row justify-center items-center gap-x-8 '>
-                        {grades.map((grade:string)=><text className='text-3xl'>{grade}</text>)}
+                        {grades.map((grade:string)=><text key={'grade'+grade} className='text-3xl'>{grade}</text>)}
                     </div>
                 </div>
                 <div className='flex flex-row justify-end w-full max-h-3 absolute top-9 right-6'>

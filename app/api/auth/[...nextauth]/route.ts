@@ -19,8 +19,8 @@ const scopes =[
 const authOptions={
     providers:[
         GoogleProvider({
-            clientId:process.env.CLIENT_ID,
-            clientSecret:process.env.CLIENT_SECRET,
+            clientId:process.env.CLIENT_ID != undefined?process.env.CLIENT_ID:"",
+            clientSecret:process.env.CLIENT_SECRET != undefined?process.env.CLIENT_SECRET:"",
             // authorizationUrl:authorizationUrl,
             // scope: scopes.join(' '),
         }),
@@ -30,11 +30,11 @@ const authOptions={
         encryption:true,
         secret:JWTSecret
     },
-    secret:JWTSecret,
-    jwt:{
-        encryption:true,
-        secret:JWTSecret
-    },
+    // secret:JWTSecret,
+    // jwt:{
+    //     encryption:true,
+    //     secret:JWTSecret
+    // },
     callbacks:{
         async jwt({token, account}:any){
             if(account){
@@ -45,6 +45,7 @@ const authOptions={
             return token;
         },
         async session({session, token, user}:any){
+            // co(user);
             session.id_token = token.id_token;
             // session.accessToken = user?.accessToken;
             // session.refreshToken = user?.refreshToken;

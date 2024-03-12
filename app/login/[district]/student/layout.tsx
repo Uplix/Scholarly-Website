@@ -31,8 +31,9 @@ export default function StudentLayout({
     const pathName = usePathname();
 
     const [errorDisplay, setErrorDisplay] = React.useState<boolean|string>(false);
+    const [successDisplay, setSuccessDisplay] = React.useState<boolean|string>(false);
 
-    const [windowWidth, setWindowWidth] = React.useState<number>((window != undefined)? window.innerWidth:0)
+    const [windowWidth, setWindowWidth] = React.useState<number>(1200)
     const [menu, setMenu] = React.useState(false);
     const [menuClassName, setMenuClassName] = React.useState('absolute left-0 top-0 flex flex-col w-96 h-full bg-gradient-to-b from-emerald-500 to-indigo-400 animate-fade-right ease-in');
     const [active, setActive] = React.useState(menu);
@@ -51,13 +52,18 @@ export default function StudentLayout({
     const [page, setPage] = React.useState(thePage)
     const [mobileCollapse, setMobileCollapse] = React.useState(false);
     const [loading, setLoading] = React.useState(false)
+    const [loadingPage, setLoadingPage] = React.useState(true);
 
     const router = useRouter();
 
     React.useEffect(()=>{
         setLoading(true);
         setTimeout(()=>{
+          setWindowWidth(window.innerWidth)  
+        }, 100)
+        setTimeout(()=>{
             setLoading(false)
+            setLoadingPage(false);
         }, 600)
     }, [])
     
@@ -112,9 +118,9 @@ export default function StudentLayout({
 
     const signingOut = async () =>{
         setLoading(true)
+        await fullSignOut();
         await signOut(auth);
         // setReload(reload+1);
-        await fullSignOut();
         // closeModal();
         router.push('/');
     }
@@ -190,7 +196,7 @@ export default function StudentLayout({
     }
 
     return(
-        <AlertContext.Provider value={{setErrorDisplay:setErrorDisplay}}>
+        <AlertContext.Provider value={{setErrorDisplay:setErrorDisplay, setSuccessDisplay:setSuccessDisplay}}>
             <div className='w-screen max-w-full h-screen max-h-screen flex flex-col'>
                 {(windowWidth < 1100)?
                 <div className='w-screen h-fit py-4 flex flex-row items-center justify-start border-b-2 border-zinc-200'>
@@ -270,7 +276,8 @@ export default function StudentLayout({
                         {children}
                     </div>
                 </div>
-                {(errorDisplay != false)?<Alert className='absolute right-1.5 lg:right-6 top-20 lg:top-3'  severity='error'>{errorDisplay}</Alert>:null}
+                {(successDisplay != false)?<Alert className='absolute right-1.5 lg:right-6 top-20 lg:top-3' onClose={()=>setSuccessDisplay(false)}  severity='success'>{successDisplay}</Alert>:null}
+                {(errorDisplay != false)?<Alert className='absolute right-1.5 lg:right-6 top-20 lg:top-3' onClose={()=>setErrorDisplay(false)} severity='error'>{errorDisplay}</Alert>:null}
                 <Dialog open={((auth.currentUser?.uid == undefined || auth.currentUser?.uid == null))}>
                     {/* <div className='w-screen h-screen flex flex-col items-center justify-center'> */}
                         {loading?null:<div className='bg-[#121820] shadow-lg shadow-zinc-300 w-fit h-fit px-10 py-8 flex flex-col items-center'>

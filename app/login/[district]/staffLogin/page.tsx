@@ -30,7 +30,7 @@ export default function StaffLogin({params}:{params:{district:string}}){
             try{
                 await signInWithEmailAndPassword(auth, theEmail, password);
                 setLoading(false);
-                router.push('/login/' + params.district + '/staff/upcomingSessions')
+                router.push('/login/' + params.district + '/staff/students')
             }catch(e:any){
                 alert('Login error: ' + e.message);
                 setError(true);

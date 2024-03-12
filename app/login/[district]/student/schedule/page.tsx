@@ -24,7 +24,7 @@ export default function Page({params}:{params:{district:string}}) {
 
     const [schedule, setSchedule]:any[] = React.useState([]);
     const [refresh, setRefresh] = React.useState(0);
-    const [styling, setStyling]:any[] = React.useState([]);
+    // const [styling, setStyling]:any[] = React.useState([]);
 
 // ⬇ this should be set to schedule|null but because i am too lazy to mess with the interface right now i will leave as any. Please come back and fix type session to account for what could possibly be undefined or null and what has to be there :)
     const [focused, setFocused]= React.useState<any>(null);
@@ -34,7 +34,7 @@ export default function Page({params}:{params:{district:string}}) {
     const [modaleOpenArray, setModalOpenArray] = React.useState<boolean[]>([]);
     const [slideOpenArray, setSlideOpenArray] = React.useState<boolean[]>([]);
     const [rater, setRater] = React.useState<any[]>([]);
-
+    
     React.useEffect(()=>{
         let theSchedule: any[] = [];
         let theModalOpenArray: boolean[] = [];
@@ -101,10 +101,10 @@ export default function Page({params}:{params:{district:string}}) {
         })
         // }, 1000)
         // console.log(theStyling)
-        setTimeout(()=>setSchedule(theSchedule), 200)
-        setTimeout(()=>setModalOpenArray(theModalOpenArray), 200)
-        setTimeout(()=>setSlideOpenArray(theSlideOpenArray), 200)
-        setTimeout(()=>setRater(theRater), 200)
+        setTimeout(()=>setSchedule([...theSchedule]), 200)
+        setTimeout(()=>setModalOpenArray([...theModalOpenArray]), 200)
+        setTimeout(()=>setSlideOpenArray([...theSlideOpenArray]), 200)
+        setTimeout(()=>setRater([...theRater]), 200)
         // setStyling(theStyling);
         // setSchedule(theSchedule);
         // console.log(theSchedule)
@@ -247,7 +247,7 @@ export default function Page({params}:{params:{district:string}}) {
 
         return(
             <>
-                <button onClick={open} className='w-fit h-fit'>
+                <button onClick={open} className='w-fit h-fit' key={object.childKey}>
                     <div className='w-80 h-52 flex-col rounded-xl bg-[#131921] drop-shadow-lg outline outline-1 outline-zinc-700'>
                         <div className='w-full h-2/5 flex flex-row items-center justify-start bg-[#111720] px-6'>
                             <div className='p-1 outline rounded-lg outline-1 outline-zinc-500 -ml-1.5'>
@@ -306,19 +306,23 @@ export default function Page({params}:{params:{district:string}}) {
                         remove(ref(db, params.district + "/sessions/" + auth.currentUser?.uid + "/" + focused.key));
                         remove(ref(db, params.district + "/schedule/" + auth.currentUser?.uid + "/" + focused.key));
                         set(ref(db, params.district + "/schedule/" + focused.tutorer.id + "/" + focused.key + "/studentCanceled"), true);
+                        alerter.setErrorDisplay("Successfully Canceled")
                     }else{
                         remove(ref(db, params.district + "/schedule/" + auth.currentUser?.uid + "/" + focused.key));
                         set(ref(db, params.district + "/sessions/" + focused.tutoree + "/" + focused.key + "/available"), true);
                         set(ref(db, params.district + "/schedule/" + focused.tutoree + "/" + focused.key + "/available"), true);
                         set(ref(db, params.district + "/schedule/" + focused.tutoree + "/" + focused.key + "/tutorer"), {canceled:true});
+                        alerter.setErrorDisplay("Successfully Canceled")
                     }
                 }else{
                     setCancelDialog(false);
+                    alerter.setErrorDisplay("Cannot cancel session!")
                     alert("I'm sorry but you can't cancel within two days of your set date when the session is taken. You can contact the other student directly through the google calendar event if you need to.");
                 }
             }else{
                 remove(ref(db, params.district + "/sessions/" + auth.currentUser?.uid + "/" + focused.key));
                 remove(ref(db, params.district + "/schedule/" + auth.currentUser?.uid + "/" + focused.key));
+                alerter.setErrorDisplay("Successfully Canceled")
             }
             setTimeout(()=>{
                 setRefresh(refresh+1);
@@ -330,7 +334,7 @@ export default function Page({params}:{params:{district:string}}) {
             }, 2000)
         }else{
             setCancelDialog(false);
-            alert("ERROR: Nothing is in focus");
+            alerter.setErrorDisplay("ERROR: Nothing is in focus");
             
         }
     }
@@ -382,7 +386,7 @@ export default function Page({params}:{params:{district:string}}) {
     });
 
     const sendReport = async ()=>{
-        let theReportTextSend = await reportOptions.map((value, index)=>{
+        let theReportTextSend:string|string[] = await reportOptions.map((value, index)=>{
             if(value.selected){
                 if(index == reportOptions.length -1){
                     if(reportOtherText.text.length < 10){
@@ -398,24 +402,43 @@ export default function Page({params}:{params:{district:string}}) {
             }
             return "";
         });
+        theReportTextSend = theReportTextSend.join(",");
         // alert(theReportTextSend);
         if(!reportOtherText.error.active){
-            await set(ref(db, params.district + "/reports/" + auth.currentUser?.uid + "/" + rater[0].key), {
-                type:"Session",
-                problems:theReportTextSend,
-                badUser:{
-                    name:rater[0].isTutor?rater[0].value.name:rater[0].value.tutorer.name,
-                    id:rater[0].isTutor?rater[0].value.tutoree:rater[0].value.tutorer.id
+            let nowTime = now.getTime();
+            setTimeout(()=>{
+                let theID = rater[0].isTutor?rater[0].value.tutoree:rater[0].value.tutorer.id
+                set(ref(db, "/" + params.district + "/reports/" + theID +"/" + rater[0].key), {
+                    type:"Session",
+                    problems:theReportTextSend,
+                    // badUser:{
+                    //     name:rater[0].isTutor?rater[0].value.name:rater[0].value.tutorer.name,
+                    //     id:rater[0].isTutor?rater[0].value.tutoree:rater[0].value.tutorer.id
+                    // },
+                    date:nowTime,
+                    reporter:auth.currentUser?.uid
+                })
+                // let json = {
+                //     type:"Session",
+                //     problems:theReportTextSend,
+                //     // badUser:{
+                //     //     name:rater[0].isTutor?rater[0].value.name:rater[0].value.tutorer.name,
+                //     //     id:rater[0].isTutor?rater[0].value.tutoree:rater[0].value.tutorer.id
+                //     // },
+                //     date:nowTime,
+                //     reporter:auth.currentUser?.uid
+                // }
+                // alert("push => " + params.district + "/reports/" +theID+"/" + rater[0].key)
+                // alert("pushing => "+ Object.values(json))
+                if(!rater[0].isTutor){
+                    remove(ref(db, "mhusd/sessions/" + auth.currentUser?.uid + "/" + rater[0].key));
                 }
-            })
-            if(!rater[0].isTutor){
-                await remove(ref(db, "mhusd/sessions/" + auth.currentUser?.uid + "/" + rater[0].key));
-            }
-            await remove(ref(db, "mhusd/schedule/" + auth.currentUser?.uid + "/" + rater[0].key))
-            setReportStudent(false)
-            setRateLoading(true);
-            setRefresh(refresh+1);
-            setTimeout(()=>setRateLoading(false), 1000);
+                remove(ref(db, "mhusd/schedule/" + auth.currentUser?.uid + "/" + rater[0].key))
+                setReportStudent(false)
+                setRateLoading(true);
+                setRefresh(refresh+1);
+                setTimeout(()=>setRateLoading(false), 1000);
+            }, 1000)
         }
     }
 
@@ -430,7 +453,7 @@ export default function Page({params}:{params:{district:string}}) {
                 remove(ref(db, "mhusd/sessions/" + auth.currentUser?.uid + "/" + rater[0].key));
             }
             remove(ref(db, "mhusd/schedule/" + auth.currentUser?.uid + "/" + rater[0].key))
-            set(push(ref(db, "mhusd/users/" + rater[0].value.tutorer.id + "/ratings")), rateValue);
+            set(push(ref(db, "mhusd/users/" + rater[0].isTutor?rater[0].value.tutoree:rater[0].value.tutorer.id + "/ratings")), rateValue);
             setRateLoading(true);
             setRefresh(refresh+1);
             setTimeout(()=>setRateLoading(false), 1000);
@@ -442,7 +465,7 @@ export default function Page({params}:{params:{district:string}}) {
             {/* <button onClick={()=>setRefresh(refresh+1)} className='self-end mt-6 mr-12 transition ease-in-out hover:scale-110 hover:-translate-y-2'>
                 <CachedIcon sx={{fontSize:55}}/>
             </button> */}
-            <div className='flex flex-wrap justify-center gap-x-14 gap-y-12 px-16 h-full pb-14'>
+            <div className='flex flex-wrap justify-center gap-x-14 gap-y-16 px-16 pb-14'>
                 {schedule.map((object:session, i:number)=>Tab(object, i))}
             </div>
             {/* <div className='w-full h-28 bg-transparent'/> */}
@@ -520,7 +543,8 @@ export default function Page({params}:{params:{district:string}}) {
                         <div className='flex-grow flex flex-col h-fit ml-6'>
                             <h3 className='text-xl text-start font-bold'>Report {rater[0].isTutor? "student":"tutor"}</h3>
                             <div className='w-full h-fit items-center flex-row flex-wrap px-7 gap-x-4 gap-y-4 mt-2 mb-2'>
-                                {reportOptions.map((value, index)=><FormControlLabel 
+                                {reportOptions.map((value, index)=><FormControlLabel
+                                key={value.label + index + 'reporter'}
                                 control={<Checkbox checked={value.selected} 
                                 onChange={()=>{
                                     let theReportOptions = reportOptions;

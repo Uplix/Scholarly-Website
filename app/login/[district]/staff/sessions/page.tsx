@@ -1,10 +1,12 @@
 'use client'
 import * as React from 'react'
-import { onValue, ref, query, orderByChild } from "firebase/database"
+import Link from 'next/link'
+import { onValue, ref, query, orderByKey, orderByChild } from "firebase/database"
 import { db } from "@/firebase/config"
-import CloseIcon from '@mui/icons-material/Close'
 import {session} from '@/clientSide/interfaces'
-import CachedIcon from '@mui/icons-material/Cached'
+import { Modal, Collapse } from '@mui/material'
+import RoomOutlinedIcon from '@mui/icons-material/RoomOutlined'
+import SettingsInputAntennaOutlinedIcon from '@mui/icons-material/SettingsInputAntennaOutlined'
 
 const now = new Date();
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -12,26 +14,32 @@ const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', '
 export default function UpcomingSessions({params}:{params:{district:string}}){
     const [schedule, setSchedule]:any[] = React.useState([]);
     const [refresh, setRefresh] = React.useState(0);
+    const [modaleOpenArray, setModalOpenArray] = React.useState<boolean[]>([]);
+    const [slideOpenArray, setSlideOpenArray] = React.useState<boolean[]>([]);
     // const [styling, setStyling]:any[] = React.useState([]);
 
     React.useEffect(()=>{
-        var theSchedule: any[] = [];
+        let theSchedule: any[] = [];
+        let theModalOpenArray:boolean[] = [];
+        let theSlideOpenArray:boolean[] = [];
         // var theStyling: string[] = [];
-        const q = query(ref(db, params.district + "/sessions"), orderByChild("date"))
-        onValue(ref(db, params.district + '/sessions/'), (snapshot)=>{
+        onValue(ref(db, params.district + '/sessions'), (snapshot)=>{
             snapshot.forEach((id)=>{
                 id.forEach((child)=>{
                     var value = child.val();
                     if(value.date >= now.getTime()){
                         theSchedule.push(value);
+                        theModalOpenArray.push(false);
+                        theSlideOpenArray.push(false);
                         // theStyling.push('regular');
                     }
                 })
             })
         })
-
-        setSchedule(theSchedule);
-        console.log(theSchedule);
+        setModalOpenArray([...theModalOpenArray]);
+        setSlideOpenArray([...theSlideOpenArray])
+        setSchedule([...theSchedule]);
+        // console.log(theSchedule);
         // setStyling(theStyling);
     }, [refresh])
 
@@ -41,19 +49,101 @@ export default function UpcomingSessions({params}:{params:{district:string}}){
         }, 700)
     }, [])
 
-    const TableLine = (value:any, i:number)=>{
-
-
+    const Tab = (object:session, i:number) =>{
+        var date = new Date(object.date);
+  
+        // const [modalOpen, setModalOpen] = React.useState(false);
+        // const [slideOpen, setSlideOpen] = React.useState(false);
+        const open = ()=>{
+            let theModalOpen = modaleOpenArray;
+            theModalOpen[i] = true;
+            setModalOpenArray([...theModalOpen])
+  
+            setTimeout(()=>{
+                let theSlideOpen = slideOpenArray;
+                theSlideOpen[i] = true;
+                setSlideOpenArray([...theSlideOpen])
+            }, 350)
+        }
+  
+        const close = ()=>{
+            let theSlideOpen = slideOpenArray;
+            theSlideOpen[i] = false;
+            setSlideOpenArray([...theSlideOpen])
+  
+            setTimeout(()=>{
+                let theModalOpen = modaleOpenArray;
+                theModalOpen[i] = false;
+                setModalOpenArray([...theModalOpen])
+            }, 350)
+        }
+  
+        // const open=()=>{
+        //     var array = styling;
+        //     array[i] = 'open';
+        //     setStyling([...array]);
+        // } 
+        // const close=()=>{
+        //     var array = styling;
+        //     array[i] = 'close';
+        //     setStyling([...array]);
+        // }
         return(
-            <div>
-
-            </div>
-        )
-    }
+          <>
+              <button onClick={open} className='w-fit h-fit' key={object.childKey + 'sessions'}>
+                  <div className='w-80 h-52 flex-col rounded-xl bg-[#131921] drop-shadow-lg outline outline-1 outline-zinc-700'>
+                      <div className='w-full h-2/5 flex flex-row items-center justify-start bg-[#111720] px-6'>
+                          <div className='p-1 outline rounded-lg outline-1 outline-zinc-500 -ml-1.5'>
+                              {(object.location !== "Google Meets")?<RoomOutlinedIcon fontSize='large'/>:<SettingsInputAntennaOutlinedIcon fontSize='large'/>}
+                          </div>
+                          <h4 className='text-2xl ml-3'>{object.subject}</h4>
+                      </div>
+                      <div className='w-full h-3/5 flex flex-col px-8'>
+                          <div className='flex-grow w-full flex flex-row items-center'>
+                              <h4 className='text-lg opacity-90 font-light'>{date.toDateString()}</h4>
+                          </div>
+                          <div className='w-full h-0.5 rounded-lg bg-zinc-800'/>
+                          <div className='flex-grow w-full flex flex-row items-center'>
+                              <h4 className='text-lg opacity-90 font-light'>{object.time}</h4>
+                          </div>
+                      </div>
+                  </div>
+              </button>
+              <Modal open={modaleOpenArray[i]} onClose={close}>
+                  <div className='w-screen h-screen flex flex-row'>
+                      <button onClick={close} className='flex-grow h-screen cursor-default'/>
+                      <Collapse className='w-fit h-fit outline outline-l-1 outline-slate-300' sx={{overflow:'scroll'}} orientation='horizontal' in={slideOpenArray[i]} >
+                          <div className='w-80 h-scren bg-[#121820] flex flex-col pt-7 pb-7 px-7 relative min-h-screen'>
+                              <h3 className='text-lg opacity-50'>Posted by:</h3>
+                              <Link href={"/login/" + params.district + "/staff/students/" + object.tutoree} className='text-xl opacity-90 mt-0.5 ml-2.5 text-blue-500 transition hover:scale-105 hover:translate-x-2 hover:underline underline-offset-2'>{object.name}</Link>
+                              <h3 className='text-lg opacity-50 mt-5'>Tutor:</h3>
+                              {((object.hasOwnProperty('tutorer'))?((object.tutorer.hasOwnProperty('name'))?<Link className='text-xl opacity-90 mt-0.5 ml-2.5 text-blue-500 transition hover:scale-105 hover:translate-x-2 hover:underline underline-offset-2' href={'/login/' + params.district + "/staff/students/" + object?.tutorer?.id}>object.tutorer.name</Link>:<h3 className='text-lg opacity-90 mt-0.5 ml-2.5'>No current tutor</h3>):<h3 className='text-lg opacity-90 mt-0.5 ml-2.5'>No current tutor</h3>)}
+                              <h3 className='text-lg opacity-50 mt-5'>Subject:</h3>
+                              <h3 className='text-lg opacity-90 mt-0.5 ml-2.5'>{object.subject}</h3>
+                              <h3 className='text-lg opacity-50 mt-5'>Grade:</h3>
+                              <h3 className='text-lg opacity-90 mt-0.5 ml-2.5'>{object.grade}</h3>
+                              <h3 className='text-lg opacity-50 mt-5'>Location:</h3>
+                              <h3 className='text-lg opacity-90 mt-0.5 ml-2.5'>{object.location}</h3>
+                              <h3 className='text-lg opacity-50 mt-5'>Date:</h3>
+                              <h3 className='text-lg opacity-90 mt-0.5 ml-2.5'>{date.toDateString()}</h3>
+                              <h3 className='text-lg opacity-50 mt-5'>Time:</h3>
+                              <h3 className='text-lg opacity-90 mt-0.5 ml-2.5'>{object.time}</h3>
+                              <h3 className='text-lg opacity-50 mt-5'>Description:</h3>
+                              <h3 className='text-lg opacity-90 mt-0.5 ml-2.5'>{object.text}</h3>
+                              {/* <button onClick={pressed} className='w-fit h-fit text-lg bg-red-500 font-light py-1.5 px-5 hover:bg-opacity-80 rounded-lg self-center mt-10'>Cancel Request</button> */}
+                          </div>
+                      </Collapse>
+                  </div>
+              </Modal>
+          </>
+      )
+  }
 
     return(
-        <div className='w-full min-h-screen flex flex-col'>
-
+        <div className='w-full min-h-screen flex flex-col py-12 items-center px-10'>
+            <div className='flex flex-wrap gap-x-20 gap-y-14 pb-14 justify-center'>
+                {schedule.map((object:session, i:number)=>Tab(object, i))}
+            </div>
         </div>
     )
 }

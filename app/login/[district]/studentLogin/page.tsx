@@ -2,7 +2,7 @@
 import Image from "next/image";
 import { auth, db, } from "@/firebase/config";
 import { onValue, ref } from "firebase/database";
-import { signIn, useSession } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import * as React from 'react'
 import { GoogleAuthProvider,signInWithCredential } from "firebase/auth";
 // import Link from "next/link";
@@ -14,6 +14,8 @@ import { CircularProgress } from "@mui/material";
 // import authentication from "@/serverFunctions/authentication";
 
 // import { useRouter } from "next/navigation";
+
+const now = new Date();
 
 function delay(delay: number) {
     return new Promise(r => {
@@ -32,36 +34,57 @@ export default function StudentLogin({params}:{params:{district:string}}){
     const { data:session } = useSession();
     const router = useRouter();
     const [currentSigningIn, setCurrentSigningIn] = React.useState(false);
-    const [windows, setWindows] = React.useState<number>((window != undefined)? window.innerWidth:0);
+    const [windows, setWindows] = React.useState<number>(1200);
     const [districtIconRef, setDistrictIconRef] = React.useState(process.env.NEXT_PUBLIC_DISTRICTS?.split(',')?.find(checker)?.split(':')[2]);
-
     React.useEffect(()=>{
         setDistrictIconRef(process.env.NEXT_PUBLIC_DISTRICTS?.split(',')?.find(checker)?.split(':')[2])
     })
 
-    React.useEffect(()=> {
+    React.useEffect(()=>{
         window.addEventListener('resize', ()=> {
             setWindows((window != undefined)? window.innerWidth:0)
-            // console.log(windows)
         })
-    }, [])
+    })
     // onAuthStateChanged(auth, ()=>setUser(auth.currentUser));
 
     // console.log("reloaded, user variable =>", auth.currentUser?.displayName)
 
     React.useEffect(()=>{
         setLoading(true);
-        setTimeout(()=>{
-            if(auth.currentUser?.displayName != null && auth.currentUser.displayName != undefined && !currentSigningIn){
-                // process.env['NEXT_PUBLIC_DISTRICT'] = params.district
-                // alert(process.env.NEXT_PUBLIC_DISTRICT);
-                router.push('/login/'+params.district +'/student');
-                // console.log(auth.currentUser);
+        setTimeout(async ()=>{
+            
+            if(session?.expires != undefined){
+                try{
+                    await delay(1000);
+                    let expiring = session.expires.split('-');
+                    if(Number(expiring[0]) < now.getFullYear() || Number(expiring[0]) < now.getMonth() || (Number(expiring[0]) == now.getMonth() && Number(expiring[0]) < now.getDay())){
+                        alert("Session is out of date, need to sign back in")
+                        await signOut();
+                    }else{
+                        if(auth.currentUser?.displayName != null && auth.currentUser.displayName != undefined && !currentSigningIn){
+                            router.push("/login/" + params.district + '/student')
+                        }else if(session?.user?.email?.split('@')[1] == signInEmail){
+                            setCurrentSigningIn(true);
+                            const credential = GoogleAuthProvider.credential(session?.id_token);
+                            await signInWithCredential(auth, credential);
+                            router.push('/login/' + params.district + '/student')
+                            // await databaseLogin();
+                            // setUser(true);
+                            // alert(auth.currentUser?.email);
+                        }else{
+                            throw new Error("Please use your school Google account to login ending in " + signInEmail +". Your email: " + session?.user?.email);
+                        }
+                    }
+                }catch(e){
+                    alert("Login failed: "+e)
+                    setLoading(false)
+                }
             }else{
+                // console.log('here', session?.user)
                 setLoading(false);
             }
         }, 2000)
-    }, [])
+    }, [session])
 
     
     var signInEmail:undefined|string = process.env.NEXT_PUBLIC_DISTRICTS?.split(',')?.find(checker)?.split(':')[1]
@@ -76,18 +99,19 @@ export default function StudentLogin({params}:{params:{district:string}}){
         try{
             if(signInEmail != undefined && signInEmail != null){
                 await signIn('google');
-                if(session?.user?.email?.split('@')[1] == signInEmail){
-                    setCurrentSigningIn(true);
-                    const credential = GoogleAuthProvider.credential(session?.id_token);
-                    await signInWithCredential(auth, credential);
-                    // await databaseLogin();
-                    // setUser(true);
-                    // alert(auth.currentUser?.email);
-                }else{
-                    throw new Error("Please use your school Google account to login ending in " + signInEmail +". Your email: " + session?.user?.email);
-                }
+                // await delay(1000);
+                // if(session?.user?.email?.split('@')[1] == signInEmail){
+                //     setCurrentSigningIn(true);
+                //     const credential = GoogleAuthProvider.credential(session?.id_token);
+                //     await signInWithCredential(auth, credential);
+                //     // await databaseLogin();
+                //     // setUser(true);
+                //     // alert(auth.currentUser?.email);
+                // }else{
+                //     throw new Error("Please use your school Google account to login ending in " + signInEmail +". Your email: " + session?.user?.email);
+                // }
             }else{
-                throw new Error("Couldn't fetch from server");
+                throw new Error("Couldn't find sign in email. Check your distict!");
             }
         }catch(e){
             alert("Login failed: " + e + ". ");

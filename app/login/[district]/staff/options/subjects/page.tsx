@@ -11,7 +11,7 @@ import { useRouter } from 'next/navigation'
 export default function SubjectEdit({params}:{params:{district:string}}){
     const [subjects, setSubjects]:any[] = React.useState([]);
     const [reload, setReload] = React.useState(0);
-    const [addSubjcetButtonColor, setAddSubjcetButtonColor] = React.useState('primary');
+    const [addSubjcetButtonColor, setAddSubjcetButtonColor] = React.useState<"inherit" | "error" | "primary" | "secondary" | "info" | "success" | "warning">('primary');
     // console.log(subjects)
     const router = useRouter();
     
@@ -73,7 +73,7 @@ export default function SubjectEdit({params}:{params:{district:string}}){
         }
 
         return(
-            <>
+            <div key={index+'subjectHead'}>
                 <div>
                     <div className='flex flex-row justify-start'>
                         <TextField error={textError} value={currentValue} onChange={(event)=>setCurrentValue(event.target.value)} onBlur={()=>{
@@ -88,7 +88,7 @@ export default function SubjectEdit({params}:{params:{district:string}}){
                         </button>
                     </div>
                     <div className='flex flex-col ml-6'>
-                        {value.classes.map((theValue:string, theIndex:number)=><IndivClasses value={theValue} index={theIndex} bigArray={array} bigIndex={index}/>)}
+                        {value.classes.map((theValue:string, theIndex:number)=><IndivClasses key={theValue+theIndex+'indivClass'} value={theValue} index={theIndex} bigArray={array} bigIndex={index}/>)}
                     </div>
                 </div>
                 <Modal className='self-center' onClose={()=>setModal(false)} open={modal}>
@@ -99,7 +99,7 @@ export default function SubjectEdit({params}:{params:{district:string}}){
                         </div>
                     </div>
                 </Modal>
-            </>
+            </div>
         )
     }
 
@@ -114,7 +114,7 @@ export default function SubjectEdit({params}:{params:{district:string}}){
         }
 
         return(
-            <div className='flex flex-row items-end'>
+            <div key={value+index} className='flex flex-row items-end'>
                 <div className='flex flex-col items-start'>
                     <div className='w-0.5 h-16 bg-gray-700 bg-opacity-60'/>
                     <div className='w-14 h-0.5 bg-gray-700 bg-opacity-60'/>
@@ -158,7 +158,7 @@ export default function SubjectEdit({params}:{params:{district:string}}){
                     <Button onClick={publishChanges} color='success' variant='outlined' className='text-2xl ml-6'>Apply Changes</Button>
                 </div>
                 <div className='flex flex-row gap-y-6 gap-x-10 mt-8 flex-wrap justify-center px-12'>
-                    {subjects.map((value:any, index:number, array:any[])=>(<SubjectHead value={value} index={index} array={array}/>))}
+                    {subjects.map((value:any, index:number, array:any[])=>(<SubjectHead key={index+'subjectHeader'} value={value} index={index} array={array}/>))}
                 </div>
             </div>
         </div>

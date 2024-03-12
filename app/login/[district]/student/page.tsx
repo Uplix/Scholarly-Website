@@ -31,57 +31,59 @@ export default function Page({params}:{params:{district:string}}) {
 
     const checker = ()=>{
         onValue(ref(db, params.district + '/users/' + auth.currentUser?.uid + '/name'), (snapshot)=>{
-            setter(snapshot.exists());
+            // setter(snapshot.exists()); 
+              // router.push('/login/' + params.district + '/studentLogin/setupAccount');
+              setter(snapshot.exists());
         })
         let done:any[] = []
-        onValue(ref(db, params.district + "/schedule/" + auth.currentUser?.uid), (snapshot)=>{
-            snapshot.forEach((id)=>{
-              var value = id.val();
-              let dating = new Date(value.date);
-              if(value.hasOwnProperty('tutorer')){
-                if(value.tutorer.hasOwnProperty('canceled')){
-                  alert("Your tutor canceled the session. Don't worry, another tutor can still accept the session. (Subject: " + value.subject + ", Date: " + dating.toDateString() + ", Time: " + value.time + ")");
-                  remove(ref(db, "mhusd/schedule/" + auth.currentUser?.uid + "/" + id.key + "/tutorer/canceled"));
-                }
-              }
+        // onValue(ref(db, params.district + "/schedule/" + auth.currentUser?.uid), (snapshot)=>{
+        //     snapshot.forEach((id)=>{
+        //       var value = id.val();
+        //       let dating = new Date(value.date);
+        //       if(value.hasOwnProperty('tutorer')){
+        //         if(value.tutorer.hasOwnProperty('canceled')){
+        //           alert("Your tutor canceled the session. Don't worry, another tutor can still accept the session. (Subject: " + value.subject + ", Date: " + dating.toDateString() + ", Time: " + value.time + ")");
+        //           remove(ref(db, "mhusd/schedule/" + auth.currentUser?.uid + "/" + id.key + "/tutorer/canceled"));
+        //         }
+        //       }
               
-              if(value.hasOwnProperty('studentCanceled') && value.studentCanceled == true){
-                alert("The student canceled the session. Don't worry, there will always be more people who need help!  (Subject: " +value.subject + ", Date: " + dating.toDateString() + ", Time: " + value.time + ")");
-                remove(ref(db, "mhusd/schedule/" + auth.currentUser?.uid + "/" + id.key))
-              }else{
-                if(value.date < now.getTime()){
-                  if(value.tutoree == auth.currentUser?.uid){
-                    if(value.hasOwnProperty('tutorer')){
-                      if(value.tutorer.hasOwnProperty('id')){
-                        done.push({
-                          isTutor:false,
-                          value:value,
-                          key:id.key,
-                          date:dating
-                        })
-                      }else{
-                        remove(ref(db, "mhusd/sessions/" + auth.currentUser?.uid + "/" + id.key));
-                        remove(ref(db, "mhusd/schedule/" + auth.currentUser?.uid + "/" + id.key));
-                        alert("Your tutor request expired and was removed");
-                      }
-                    }else{
-                      remove(ref(db, "mhusd/sessions/" + auth.currentUser?.uid + "/" + id.key));
-                      remove(ref(db, "mhusd/schedule/" + auth.currentUser?.uid + "/" + id.key));
-                      alert("Your tutor request expired and was removed");
-                    }
-                  }else{
-                    done.push({
-                      isTutor:true,
-                      value:value, 
-                      key:id.key,
-                      date:dating
-                    });
-                  }
-                }
-              }
-            })
-            // setRate(done);
-        })
+        //       if(value.hasOwnProperty('studentCanceled') && value.studentCanceled == true){
+        //         alert("The student canceled the session. Don't worry, there will always be more people who need help!  (Subject: " +value.subject + ", Date: " + dating.toDateString() + ", Time: " + value.time + ")");
+        //         remove(ref(db, "mhusd/schedule/" + auth.currentUser?.uid + "/" + id.key))
+        //       }else{
+        //         if(value.date < now.getTime()){
+        //           if(value.tutoree == auth.currentUser?.uid){
+        //             if(value.hasOwnProperty('tutorer')){
+        //               if(value.tutorer.hasOwnProperty('id')){
+        //                 done.push({
+        //                   isTutor:false,
+        //                   value:value,
+        //                   key:id.key,
+        //                   date:dating
+        //                 })
+        //               }else{
+        //                 remove(ref(db, "mhusd/sessions/" + auth.currentUser?.uid + "/" + id.key));
+        //                 remove(ref(db, "mhusd/schedule/" + auth.currentUser?.uid + "/" + id.key));
+        //                 alert("Your tutor request expired and was removed");
+        //               }
+        //             }else{
+        //               remove(ref(db, "mhusd/sessions/" + auth.currentUser?.uid + "/" + id.key));
+        //               remove(ref(db, "mhusd/schedule/" + auth.currentUser?.uid + "/" + id.key));
+        //               alert("Your tutor request expired and was removed");
+        //             }
+        //           }else{
+        //             done.push({
+        //               isTutor:true,
+        //               value:value, 
+        //               key:id.key,
+        //               date:dating
+        //             });
+        //           }
+        //         }
+        //       }
+        //     })
+        //     // setRate(done);
+        // })
         // console.log('checker')
     }
 
@@ -89,12 +91,14 @@ export default function Page({params}:{params:{district:string}}) {
         console.log('setter')
         if(exists != null && auth.currentUser?.displayName != undefined && auth.currentUser.displayName != null){
             if(exists == false){
-                set(ref(db, params.district + '/users/' + auth.currentUser?.uid + '/name'), auth.currentUser?.displayName)
-                set(ref(db, params.district + '/users/' + auth.currentUser?.uid + '/district'), auth.currentUser.email?.split('@')[1].split('.')[1])
-                setTimeout(change, 1000)
+                // set(ref(db, params.district + '/users/' + auth.currentUser?.uid + '/name'), auth.currentUser?.displayName);
+                // set(ref(db, params.district + '/users/' + auth.currentUser?.uid + '/district'), auth.currentUser.email?.split('@')[1].split('.')[1]);
+                // set(ref(db, params.district + "/users/" + auth.currentUser?.uid + "/image"), auth.currentUser.photoURL);
+                // setTimeout(change, 1000)
                 // done = true;
                 // console.log(exists)
                 // return;
+                router.push('/login/' + params.district + '/studentLogin/setupAccount');
             }else{
                 setTimeout(change, 1000)
                 // done = true; 

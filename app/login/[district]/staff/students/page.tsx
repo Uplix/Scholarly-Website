@@ -66,7 +66,8 @@ export default function Students({params}:{params:{district:string}}){
         const q = query(ref(db, 'mhusd/users/'), orderByChild('name'), startAt((search == undefined || search == null || search == '')?'A':search), limitToFirst(5))
         // setLoading(true)
         // setStudents([])
-        var theStudents:rowType[] = []
+        let theStudents:rowType[] = []
+        Object.isExtensible(theStudents);
 
         onValue(q, (snapshot)=>{
             snapshot.forEach((user)=>{
@@ -126,8 +127,8 @@ export default function Students({params}:{params:{district:string}}){
         }, 1500)
     }
 
-    const studentClicked:GridEventListener<'rowDoubleClick'> = (params, event, details) =>{
-        router.push('/login/' + params.district + '/staff/students/' + params.id)
+    const studentClicked:GridEventListener<'rowDoubleClick'> = (paramers, event, details) =>{
+        router.push('/login/' + params.district + '/staff/students/' + paramers.id)
     }
 
     return(
@@ -164,14 +165,14 @@ export default function Students({params}:{params:{district:string}}){
                     <DataGrid 
                         columns={columns}
                         rows={students}
-                        onRowDoubleClick={studentClicked}
-                        initialState={{
-                            pagination: {
-                              paginationModel: {
-                                pageSize: 5,
-                              },
-                            },
-                          }}
+                        onRowClick={studentClicked}
+                        // initialState={{
+                        //     pagination: {
+                        //       paginationModel: {
+                        //         pageSize: 5,
+                        //       },
+                        //     },
+                        //   }}
                     />
                 </div>}
             </div>
