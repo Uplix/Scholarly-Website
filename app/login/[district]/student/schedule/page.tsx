@@ -416,7 +416,10 @@ export default function Page({params}:{params:{district:string}}) {
                     //     id:rater[0].isTutor?rater[0].value.tutoree:rater[0].value.tutorer.id
                     // },
                     date:nowTime,
-                    reporter:auth.currentUser?.uid
+                    reporter:{
+                        name:auth.currentUser?.displayName,
+                        uid:auth.currentUser?.uid
+                    }
                 })
                 // let json = {
                 //     type:"Session",
