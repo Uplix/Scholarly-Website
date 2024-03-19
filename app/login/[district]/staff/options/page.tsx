@@ -90,6 +90,7 @@ export default function Options({params}:{params:{district:string}}){
 
     return(
         <div className='flex flex-col w-full h-fit items-center mb-16'>
+            <title>Staff Options</title>
             <text className='text-6xl text-center mt-12 px-8 md:leading-normal leading-snug font-bold'>Student Request Options</text>
             <div className='flex flex-row flex-wrap gap-x-14 px-12 gap-y-12 mt-20 w-full justify-center'>
                 <div className='flex flex-col items-center w-fit h-fit'>

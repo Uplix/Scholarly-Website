@@ -144,6 +144,7 @@ export default function StudentLogin({params}:{params:{district:string}}){
 
     return(
         <div className="flex flex-row min-h-screen w-screen justify-center items-center">
+            <title>Scholarly: Student Login</title>
             <div className="w-full h-full flex flex-col max-w-3xl items-center justify-center">
                 <div className="h-fit w-52 flex flex-row justify-center items-center">
                     <Image alt='Scholarly' src={'/images/sizedCircularScholarlyIcon.png'} width={70} height={70}/>

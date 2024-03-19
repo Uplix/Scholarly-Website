@@ -308,6 +308,7 @@ export default function Page({params}:{params:{district:string}}) {
 
     return(
         <div className='w-full h-fit pb-6 flex flex-col justify-center items-center'>
+            <title>Scholarly: Request</title>
             <text className='text-slate-50 text-6xl mt-6 text-center font-light font-sans'>Request Help</text>
             <div className='flex flex-wrap flex-row gap-x-20 gap-y-10 justify-center mt-11 mx-20'>
                 <div className='animate-jump-in ease-in'>

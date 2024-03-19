@@ -17,6 +17,7 @@ import PersonAddAltOutlinedIcon from '@mui/icons-material/PersonAddAltOutlined';
 import { signOut } from "firebase/auth";
 import { signOut as fullSignOut }  from "next-auth/react";
 import { useRouter } from 'next/navigation';
+import { Metadata, ResolvingMetadata } from 'next'
 
 // import Modal from '@mui/material/Modal';
 

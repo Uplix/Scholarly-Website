@@ -117,7 +117,7 @@ export default function UpcomingSessions({params}:{params:{district:string}}){
                               <h3 className='text-lg opacity-50'>Posted by:</h3>
                               <Link href={"/login/" + params.district + "/staff/students/" + object.tutoree} className='text-xl opacity-90 mt-0.5 ml-2.5 text-blue-500 transition hover:scale-105 hover:translate-x-2 hover:underline underline-offset-2'>{object.name}</Link>
                               <h3 className='text-lg opacity-50 mt-5'>Tutor:</h3>
-                              {((object.hasOwnProperty('tutorer'))?((object.tutorer.hasOwnProperty('name'))?<Link className='text-xl opacity-90 mt-0.5 ml-2.5 text-blue-500 transition hover:scale-105 hover:translate-x-2 hover:underline underline-offset-2' href={'/login/' + params.district + "/staff/students/" + object?.tutorer?.id}>object.tutorer.name</Link>:<h3 className='text-lg opacity-90 mt-0.5 ml-2.5'>No current tutor</h3>):<h3 className='text-lg opacity-90 mt-0.5 ml-2.5'>No current tutor</h3>)}
+                              {((object.hasOwnProperty('tutorer'))?((object.tutorer.hasOwnProperty('name'))?<Link className='text-xl opacity-90 mt-0.5 ml-2.5 text-blue-500 transition hover:scale-105 hover:translate-x-2 hover:underline underline-offset-2' href={'/login/' + params.district + "/staff/students/" + object?.tutorer?.id}>{object.tutorer.name}</Link>:<h3 className='text-lg opacity-90 mt-0.5 ml-2.5'>No current tutor</h3>):<h3 className='text-lg opacity-90 mt-0.5 ml-2.5'>No current tutor</h3>)}
                               <h3 className='text-lg opacity-50 mt-5'>Subject:</h3>
                               <h3 className='text-lg opacity-90 mt-0.5 ml-2.5'>{object.subject}</h3>
                               <h3 className='text-lg opacity-50 mt-5'>Grade:</h3>
@@ -141,6 +141,7 @@ export default function UpcomingSessions({params}:{params:{district:string}}){
 
     return(
         <div className='w-full min-h-screen flex flex-col py-12 items-center px-10'>
+            <title>Scholarly: Sessions</title>
             <div className='flex flex-wrap gap-x-20 gap-y-14 pb-14 justify-center'>
                 {schedule.map((object:session, i:number)=>Tab(object, i))}
             </div>

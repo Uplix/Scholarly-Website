@@ -83,7 +83,7 @@ export default function Students({params}:{params:{district:string}}){
                 const data:rowType = {
                     id:user.key,
                     name:user.child('name').val(),
-                    rating:sumRatings,
+                    rating:(numRatings == 0)? 0:sumRatings/numRatings,
                     numRatings:numRatings,
                     isTutor:(user.child('isTutor').exists())?user.child('isTutor').val():false
                 }
@@ -133,6 +133,7 @@ export default function Students({params}:{params:{district:string}}){
 
     return(
         <div className='flex flex-col w-full h-full items-center py-10 mb-5'>
+            <title>Scholarly: Students</title>
             <text className='text-center text-6xl font-semibold mb-8'>Students</text>
             <FormControl size='medium' variant='outlined'>
                 <InputLabel htmlFor='student-search'>Search</InputLabel>

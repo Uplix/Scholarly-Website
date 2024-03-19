@@ -432,6 +432,7 @@ export default function Page({params}:{params:{district:string}}) {
 
     return(
         <div className='flex flex-col w-screen h-full pt-12 px-10 items-center'>
+            <title>Scholarly: Available</title>
             {/* <button onClick={()=>setRefresh(refresh+1)} className='self-end mt-6 mr-12 transition ease-in-out hover:scale-110 hover:-translate-y-2'>
                 <CachedIcon sx={{fontSize:55}}/>
             </button> */}
