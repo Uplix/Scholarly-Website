@@ -180,26 +180,26 @@ export default function IndivStudent({params}:{params:{slug:string, district:str
     const ReportBlock=(object:reportInterface, i:number)=>{
         let date = new Date(object.date);
         const open = ()=>{
-            let theModalOpen = reportModalOpenArray;
-            theModalOpen[i] = true;
-            setModalOpenArray([...theModalOpen])
+            let theReportModalArray = reportModalOpenArray;
+            theReportModalArray[i] = true;
+            setReportModalOpenArray([...theReportModalArray])
 
             setTimeout(()=>{
-                let theSlideOpen = reportSlideOpenArray;
-                theSlideOpen[i] = true;
-                setSlideOpenArray([...theSlideOpen])
+                let theReportSlideOpenArray = reportSlideOpenArray;
+                theReportSlideOpenArray[i] = true;
+                setReportSlideOpenArray([...theReportSlideOpenArray])
             }, 350)
         }
 
         const close = ()=>{
-            let theSlideOpen = reportSlideOpenArray;
-            theSlideOpen[i] = false;
-            setSlideOpenArray([...theSlideOpen])
+            let theReportSlideOpenArray = reportSlideOpenArray;
+            theReportSlideOpenArray[i] = false;
+            setReportSlideOpenArray([...theReportSlideOpenArray])
 
             setTimeout(()=>{
-                let theModalOpen = reportModalOpenArray;
-                theModalOpen[i] = false;
-                setModalOpenArray([...theModalOpen])
+                let theReportModalArray = reportModalOpenArray;
+                theReportModalArray[i] = false;
+                setReportModalOpenArray([...theReportModalArray])
             }, 350)
         }
 
@@ -231,7 +231,7 @@ export default function IndivStudent({params}:{params:{slug:string, district:str
 
         return(
             <>
-                <button onClick={open} className='w-fit h-fit' key={object.key}>
+                <button onClick={open} className='w-fit h-fit my-2' key={object.key}>
                     <div className='w-80 h-52 flex-col rounded-xl bg-[#131921] drop-shadow-lg outline outline-1 outline-zinc-700'>
                         <div className='w-full h-2/5 flex flex-row items-center justify-start bg-[#111720] px-6'>
                             <div className='p-1 outline rounded-lg outline-1 outline-zinc-500 -ml-1.5'>
@@ -250,10 +250,10 @@ export default function IndivStudent({params}:{params:{slug:string, district:str
                         </div>
                     </div>
                 </button>
-                <Modal open={modaleOpenArray[i]} onClose={close}>
+                <Modal open={reportModalOpenArray[i]} onClose={close}>
                     <div className='w-screen h-screen flex flex-row'>
                         <button onClick={close} className='flex-grow h-screen cursor-default'/>
-                        <Collapse className='w-fit h-fit outline outline-l-1 outline-slate-300' sx={{overflow:'scroll'}} orientation='horizontal' in={slideOpenArray[i]} >
+                        <Collapse className='w-fit h-fit outline outline-l-1 outline-slate-300' sx={{overflow:'scroll'}} orientation='horizontal' in={reportSlideOpenArray[i]} >
                             <div className='w-80 h-scren bg-[#121820] flex flex-col pt-7 pb-7 px-7 relative min-h-screen'>
                                 <h3 className='text-lg opacity-50'>Reporter:</h3>
                                 <Link href={"/login/" + params.district + "/staff/students/" + object.reporter.uid} className='text-xl opacity-90 mt-0.5 ml-2.5 text-blue-500 transition hover:scale-105 hover:translate-x-2 hover:underline underline-offset-2'>{object.reporter.name}</Link>
@@ -334,6 +334,7 @@ export default function IndivStudent({params}:{params:{slug:string, district:str
     // console.log(user?.ratings)
     return(
         <div className='w-full h-full min-h-screen flex flex-col pl-0 px-1 lg:pl-2 lg:px-0'>
+            <title>Scholarly: Student</title>
             <div className='bg-gradient-to-br from-sky-400 via-emerald-300 to-violet-500 w-full h-fit rounded-xl flex flex-col'>
                 <div className='w-full h-48'/>
             </div>
@@ -362,7 +363,7 @@ export default function IndivStudent({params}:{params:{slug:string, district:str
                         <div className='w-fit h-fit ml-12 flex flex-col items-center'>
                             <h3 className='text-2xl font-medium mt-8'>Reports</h3>
                             <div className='w-fit h-fit mt-2 border border-slate-200 border-opacity-50 rounded-lg px-4 py-2'>
-                                {reports.length > 0? <div>{reports.map((object, i)=>ReportBlock(object, i))}</div>:<h3 className='text-2xl text-center text-slate-200'>Nothing to report 👍</h3>}
+                                {reports.length > 0? <>{reports.map((object, i)=>ReportBlock(object, i))}</>:<h3 className='text-2xl text-center text-slate-200'>Nothing to report 👍</h3>}
                             </div>
                         </div>
                         <div className='w-fit h-fit mt-12 flex flex-row items-center gap-x-5'>

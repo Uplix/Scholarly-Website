@@ -109,6 +109,7 @@ export default function Reports({params}:{params:{district:string}}){
 
         return(
             <>
+                <title>Scholarly: Reports</title>
                 <button onClick={open} className='w-fit h-fit' key={object.key}>
                     <div className='w-80 h-52 flex-col rounded-xl bg-[#131921] drop-shadow-lg outline outline-1 outline-zinc-700'>
                         <div className='w-full h-2/5 flex flex-row items-center justify-start bg-[#111720] px-6'>

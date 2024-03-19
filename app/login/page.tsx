@@ -36,6 +36,7 @@ export default function District(){
 
     return(
         <div className="flex flex-row flex-wrap min-h-screen items-center justify-center">
+            <title>Scholarly: Choose District</title>
             <div className="w-96 flex flex-col items-center">
                 <Image alt="School-Icon" src={SchoolIcon} width={300} height={0}/>
             </div>

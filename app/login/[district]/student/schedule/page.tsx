@@ -364,7 +364,7 @@ export default function Page({params}:{params:{district:string}}) {
             selected:false
         },
         {
-            label:"Harrassment",
+            label:"Harassment",
             selected:false
         },
         {
@@ -434,9 +434,9 @@ export default function Page({params}:{params:{district:string}}) {
                 // alert("push => " + params.district + "/reports/" +theID+"/" + rater[0].key)
                 // alert("pushing => "+ Object.values(json))
                 if(!rater[0].isTutor){
-                    remove(ref(db, "mhusd/sessions/" + auth.currentUser?.uid + "/" + rater[0].key));
+                    remove(ref(db, params.district + "/sessions/" + auth.currentUser?.uid + "/" + rater[0].key));
                 }
-                remove(ref(db, "mhusd/schedule/" + auth.currentUser?.uid + "/" + rater[0].key))
+                remove(ref(db, params.district + "/schedule/" + auth.currentUser?.uid + "/" + rater[0].key))
                 setReportStudent(false)
                 setRateLoading(true);
                 setRefresh(refresh+1);
@@ -446,6 +446,7 @@ export default function Page({params}:{params:{district:string}}) {
     }
 
     const sendRating=()=>{
+        let theID = rater[0].isTutor?rater[0].value.tutoree:rater[0].value.tutorer.id
         if(rateValue == null || rateValue < 1 || rateValue > 5){
             // alerter.setErrorDisplay("Please select a rating");
             setRateError(true)
@@ -453,10 +454,10 @@ export default function Page({params}:{params:{district:string}}) {
             // alerter.setErrorDisplay(false);
             setRateError(false)
             if(!rater[0].isTutor){
-                remove(ref(db, "mhusd/sessions/" + auth.currentUser?.uid + "/" + rater[0].key));
+                remove(ref(db, params.district + "/sessions/" + auth.currentUser?.uid + "/" + rater[0].key));
             }
-            remove(ref(db, "mhusd/schedule/" + auth.currentUser?.uid + "/" + rater[0].key))
-            set(push(ref(db, "mhusd/users/" + rater[0].isTutor?rater[0].value.tutoree:rater[0].value.tutorer.id + "/ratings")), rateValue);
+            remove(ref(db, params.district + "/schedule/" + auth.currentUser?.uid + "/" + rater[0].key))
+            set(push(ref(db, params.district + "/users/" + theID + "/ratings")), rateValue);
             setRateLoading(true);
             setRefresh(refresh+1);
             setTimeout(()=>setRateLoading(false), 1000);
@@ -465,6 +466,7 @@ export default function Page({params}:{params:{district:string}}) {
 
     return(
         <div className='flex flex-col w-full h-full items-center pt-12'>
+            <title>Scholarly: Schedule</title>
             {/* <button onClick={()=>setRefresh(refresh+1)} className='self-end mt-6 mr-12 transition ease-in-out hover:scale-110 hover:-translate-y-2'>
                 <CachedIcon sx={{fontSize:55}}/>
             </button> */}

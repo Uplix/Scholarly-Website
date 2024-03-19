@@ -43,6 +43,7 @@ export default function CreateAccount({params}:{params:{district:string}}){
 
     return(
         <div className='flex flex-col w-screen min-h-screen h-fit items-center pt-14'>
+            <title>Scholarly: Setup Account</title>
             <div className="w-fit h-fit flex flex-col px-7 sm:px-14">
                 <h2 className="text-4xl font-light text-center">We want to know a little bit more about you</h2>
                 <div className='flex flex-row gap-x-4 flex-wrap gap-y-2 mt-8 items-center'>

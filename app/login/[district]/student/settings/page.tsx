@@ -110,6 +110,7 @@ export default function Settings({params}:{params:{district:string}}){
 
     return(
         <div className="flex flex-col w-full h-fit items-center pt-10 pb-10">
+            <title>Scholarly: Settings</title>
             <div className="rounded-full w-fit h-fit animate-jump-in animate-ease-in">
                 {(auth.currentUser == null || auth.currentUser == undefined)? <PersonIcon fontSize='large'/>:<Avatar sx={{width:70, height:70}} alt={"Profile Image"} src={auth.currentUser.photoURL}/>}
             </div>

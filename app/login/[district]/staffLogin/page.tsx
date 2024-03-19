@@ -80,6 +80,7 @@ export default function StaffLogin({params}:{params:{district:string}}){
 
     return(
         <div className='flex flex-col h-screen pt-10 justify-center items-center'>
+            <title>Scholarly: Staff Login</title>
             <Image alt='Scholarly_Icon' src={'/images/sizedCircularScholarlyIcon.png'} width={70} height={70}/>
             <h3 className='text-center text-4xl sm:text-5xl px-5 text-zinc-200 mt-7 font-light'>Sign in to your account</h3>
             <div className='flex flex-col w-screen px-9 max-w-xl mt-14'>

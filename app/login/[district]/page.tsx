@@ -30,6 +30,7 @@ export default function Home({params}:{params:{district:string}}) {
 
     return (
         <main className='flex min-h-screen flex-col items-center justify-center w-screen py-5'>
+            <title>Scholarly: Login</title>
             <h2 className='text-7xl font-semibold text-center'>Sign In</h2>
             <h5 className='text-4xl text-center mt-7 max-w-xl px-8'>What kind of account do you want to login to?</h5>
             <div className='flex flex-row flex-wrap items-center justify-center gap-x-16 gap-y-10 mt-12 px-8'>
