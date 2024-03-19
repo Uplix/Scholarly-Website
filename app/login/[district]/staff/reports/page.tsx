@@ -175,7 +175,7 @@ export default function Reports({params}:{params:{district:string}}){
                         </div>
                         <div className='flex-grow flex flex-col h-fit ml-6'>
                             <h3 className='text-xl text-start font-bold'>This cannot be undone</h3>
-                            <h5 className='text-base opacity-75 font-light mt-2'>Please make sure that you have resolved this student's report before you mark it as resolved. This report will be deleted.</h5>
+                            <h5 className='text-base opacity-75 font-light mt-2'>Please make sure that you have resolved this student{"'"}s report before you mark it as resolved. This report will be deleted.</h5>
                             <div className='w-full flex flex-row h-fit justify-end mt-4'>
                                 <button onClick={closeConfim}  className='w-fit h-fit py-1 px-4 outline outline-1 outline-zinc-500 rounded-lg text-lg mr-5'>Cancel</button>
                                 <button onClick={resolver} className='w-fit h-fit py-1 px-4 bg-red-500 text-lg rounded-lg'>Confirm</button>
