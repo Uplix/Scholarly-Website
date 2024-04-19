@@ -60,8 +60,8 @@ export function Footer(){
                         <h4 className="text-lg text-left text-slate-100">Legal</h4>
                         <div className="flex flex-col items-start ml-1.5">
                             <Link href={'/privacy_policy.HTML'} className="text-md text-right opacity-80 transition hover:scale-105 hover:underline decoration-2 decoration-zinc-300 underline-offset-2">Privacy Policy</Link>
-                            <Link href={'/privacy_policy.HTML'} className="text-md text-right opacity-80 transition hover:scale-105 hover:underline decoration-2 decoration-zinc-300 underline-offset-2">EULA</Link>
-                            <Link href={'/'} className="text-md text-right opacity-80 transition hover:scale-105 hover:underline decoration-2 decoration-zinc-300 underline-offset-2">Terms</Link>
+                            <Link href={'/eula.HTML'} className="text-md text-right opacity-80 transition hover:scale-105 hover:underline decoration-2 decoration-zinc-300 underline-offset-2">EULA</Link>
+                            <Link href={'/terms.HTML'} className="text-md text-right opacity-80 transition hover:scale-105 hover:underline decoration-2 decoration-zinc-300 underline-offset-2">Terms</Link>
                             {/* <Link href={'/'} className="text-md text-right opacity-80 transition hover:scale-105 hover:underline decoration-2 decoration-zinc-300 underline-offset-2">Our Team</Link> */}
                         </div>
                     </div>

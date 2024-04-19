@@ -183,7 +183,7 @@ export default function Home() {
                         </button>
                     </div>
                     <div className='flex flex-col mt-2.5'>
-                        <Image alt='Apple Scholarly' src={'/images/iPhoneMockUp2.png'} width={200} height={400}/>
+                        <Image alt='Apple Scholarly' src={'/images/iPhoneMockUp3.png'} width={200} height={400}/>
                         <button className='w-fit h-fit transition hover:scale-105 mt-5' onClick={appStoreClick}>
                             <Image alt='App-Store' src={AppStoreSVG} width={200} height={50}/>
                         </button>
