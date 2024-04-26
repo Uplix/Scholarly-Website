@@ -77,6 +77,7 @@ export default function StudentLogin({params}:{params:{district:string}}){
                     }
                 }catch(e){
                     alert("Login failed: "+e)
+                    await signOut();
                     setLoading(false)
                 }
             }else{
@@ -115,6 +116,7 @@ export default function StudentLogin({params}:{params:{district:string}}){
             }
         }catch(e){
             alert("Login failed: " + e + ". ");
+            await signOut();
             setCurrentSigningIn(true);
             setLoading(false);
         }

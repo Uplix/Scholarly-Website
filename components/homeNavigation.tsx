@@ -67,7 +67,7 @@ export function HomeNavigation({width}:{width:number}){
     return(
         <div className="w-screen h-fit ">
             {(width>=1024)?<div className="w-0 h-0 lg:w-screen lg:h-fit invisible lg:visible">
-                <div className='flex flex-row items-center w-full h-24 bg-blend-lighten bg-transparent shadow-lg shadow-sky-500'>
+                <div className='flex flex-row items-center w-full h-24 bg-blend-lighten '>
                     <ScholarlyIcon />
                     <div className='space-x-16 ml-20 h-full flex flex-row items-center justify-self-center'>
                         <Link className='text-4xl transition ease-in-out hover:scale-105 font-light' href={'/go/about'}>About</Link>
@@ -79,7 +79,7 @@ export function HomeNavigation({width}:{width:number}){
                 </div>                
             </div>:null}
             {(width<1024)?<div className="flex flex-col w-screen h-fit lg:invisible lg:w-0 lg:h-0">
-                <div className="flex flex-row items-center w-full h-24 bg-blend-lighten bg-transparent shadow-lg shadow-sky-500">
+                <div className="flex flex-row items-center w-full h-24 bg-blend-lighten bg-transparent">
                     <ScholarlyIcon />
                     <div className="ml-6">
                         {open?<CloseIcon />:<MenuIcon />}
@@ -87,9 +87,9 @@ export function HomeNavigation({width}:{width:number}){
                     <div className="flex-grow"/>
                     <LoginButton />
                 </div>
-                <div className="w-screen h-fit flex flex-col items-center">
+                <div className="z-50 w-screen h-fit flex flex-col items-center absolute top-24 opacity-90 rounded-lg">
                     <Collapse in={open}>
-                        <div className="w-screen  pt-4 pb-6 h-fit flex flex-col items-center gap-y-5 bg-gradient-to-b from-sky-500 to-transparent" >
+                        <div className="w-screen pt-4 pb-6 h-fit flex flex-col items-center gap-y-5 bg-[#121820]" >
                             <Link className='text-5xl w-fit md:text-6xl transition ease-in-out hover:scale-110 text-center' href={'/go/about'}>About</Link>
                             <Link className='text-5xl w-fit md:text-6xl transition ease-in-out hover:scale-110 text-center' href={'/go/contact'}>Contact</Link>
                             <Link className='text-5xl w-fit md:text-6xl transition ease-in-out hover:scale-110 text-center' href={'/go/team'}>Our Team</Link>
