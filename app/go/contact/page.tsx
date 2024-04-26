@@ -33,7 +33,7 @@ export default function ContactUs() {
         <div className='flex flex-col pt-8 pb-32 px-10 items-center min-h-screen'>
             <title>Contact Us</title>
             <h1 className="text-5xl md:text-6xl text-center font-sans">Contact Us</h1>
-            <h2 className="text-xl opacity-80 mt-5 font-light mb-6 text-center z-0">We're here to help. What can we do for you?</h2>
+            <h2 className="text-xl opacity-80 mt-5 font-light mb-6 text-center z-0">We{"'"}re here to help. What can we do for you?</h2>
             {supports.map((object, i)=>(
                 <div className="flex flex-row mt-16 w-fit h-fit max-w-xl" key={i}>
                     <div className="w-fit h-fit pr-7">
