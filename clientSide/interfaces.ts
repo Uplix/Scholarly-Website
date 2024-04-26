@@ -1,3 +1,5 @@
+import { ReactElement } from "react";
+
 export interface session{
     tutorer: any;
     available:boolean,
@@ -28,4 +30,12 @@ export interface reportInterface{
     },
     key:string,
     student:string | undefined
+}
+
+export interface supportInterface{
+    title:string,
+    description:string,
+    icon:ReactElement,
+    buttonText:string,
+    emailLink:string
 }
