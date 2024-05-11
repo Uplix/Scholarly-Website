@@ -310,6 +310,7 @@ export default function Page({params}:{params:{district:string}}) {
                     }else{
                         remove(ref(db, params.district + "/schedule/" + auth.currentUser?.uid + "/" + focused.key));
                         set(ref(db, params.district + "/sessions/" + focused.tutoree + "/" + focused.key + "/available"), true);
+                        remove(ref(db, params.district + "/sessions/"+ focused.tutoree + "/" + focused.key + "/tutorer"));
                         set(ref(db, params.district + "/schedule/" + focused.tutoree + "/" + focused.key + "/available"), true);
                         set(ref(db, params.district + "/schedule/" + focused.tutoree + "/" + focused.key + "/tutorer"), {canceled:true});
                         alerter.setErrorDisplay("Successfully Canceled")

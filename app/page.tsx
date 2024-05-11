@@ -55,7 +55,7 @@ export default function Home() {
             <div className='flex flex-row flex-wrap w-full h-fit pb-10 justify-center gap-y-16' id='this-is-scholarly'>
                 <div className='flex flex-col justify-center items-start pl-4 sm:pl-8 md:pl-16 flex-grow pr-6 xl:pr-0 mt-20 xl:mt-0'>
                     <Image alt='scholarly-icon' src={'/images/sizedCircularScholarlyIcon.png'} width={90} height={90}/>
-                    <button className='hidden sm:flex sm:w-fit sm:h-fit py-0.5 px-2.5 ring-2 ring-zinc-800 ring-offset-1 rounded-xl mt-10 transition hover:translate-x-1'>We are looking for more designers.  <span className='text-sky-400'>Learn more <ArrowForwardIcon fontSize='small'/></span> </button>
+                    <Link href={'/go/team'} className='hidden sm:flex sm:w-fit sm:h-fit py-0.5 px-2.5 ring-2 ring-zinc-800 ring-offset-1 rounded-xl mt-10 transition hover:translate-x-1'>We are looking for more designers.  <span className='text-sky-400'>Learn more <ArrowForwardIcon fontSize='small'/></span> </Link>
                     <h1 className='text-5xl sm:text-7xl font-bold text-left mt-6 max-w-xl'>Perfecting peer tutoring</h1>
                     <h4 className='text-lg sm:text-xl font-light text-left opacity-70 mt-5 max-w-xl'>Scholarly makes the proccess of peer tutoring easy and accessible to all. It has never been simpler for students to get the help that they need. Our suite of functions also allows for complete transperancy with your school district.</h4>
                     <div className='flex flex-row mt-6 items-center justify-center'>
