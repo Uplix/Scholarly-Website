@@ -51,9 +51,10 @@ export function Footer(){
                         <h4 className="text-lg text-left text-slate-100">Pages</h4>
                         <div className="flex flex-col items-start ml-1.5">
                             <Link href={'/'} className="text-md text-right opacity-80 transition hover:scale-105 hover:underline decoration-2 decoration-zinc-300 underline-offset-2">Home</Link>
-                            <Link href={'/'} className="text-md text-right opacity-80 transition hover:scale-105 hover:underline decoration-2 decoration-zinc-300 underline-offset-2">About Us</Link>
-                            <Link href={'/'} className="text-md text-right opacity-80 transition hover:scale-105 hover:underline decoration-2 decoration-zinc-300 underline-offset-2">Contact Us</Link>
-                            <Link href={'/'} className="text-md text-right opacity-80 transition hover:scale-105 hover:underline decoration-2 decoration-zinc-300 underline-offset-2">Our Team</Link>
+                            <Link href={'/go/about'} className="text-md text-right opacity-80 transition hover:scale-105 hover:underline decoration-2 decoration-zinc-300 underline-offset-2">About Us</Link>
+                            <Link href={'/go/contact'} className="text-md text-right opacity-80 transition hover:scale-105 hover:underline decoration-2 decoration-zinc-300 underline-offset-2">Contact Us</Link>
+                            <Link href={'/go/team'} className="text-md text-right opacity-80 transition hover:scale-105 hover:underline decoration-2 decoration-zinc-300 underline-offset-2">Our Team</Link>
+                            <Link href={'/login'} className="text-md text-right opacity-80 transition hover:scale-105 hover:underline decoration-2 decoration-zinc-300 underline-offset-2">Login</Link>
                         </div>
                     </div>
                     <div className="flex flex-col items-start">

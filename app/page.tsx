@@ -176,15 +176,15 @@ export default function Home() {
             <div className='w-screen h-fit bg-gradient-radial to-emerald-500 via-sky-500 from-violet-400 pt-12 pb-12'>
                 <h2 className='text-6xl md:text-8xl font-semibold text-center text-zinc-100 px-12'>Get the app!</h2>
                 <div className='flex flex-row flex-wrap justify-center gap-x-16 gap-y-8 px-14 mt-12'>
-                    <div className='flex flex-col mt-2.5'>
-                        <Image alt='Apple Scholarly' src={'/images/androidMockUp.png'} width={230} height={400}/>
-                        <button className='w-fit h-fit transition hover:scale-105 mt-1.5' onClick={googlePlayClick}>
+                    <div className='flex flex-col mt-2.5 items-center'>
+                        <Image alt='Apple Scholarly' src={'/images/AndroidMockupScreenshotVersion13.png'} width={172} height={350}/>
+                        <button className='w-fit h-fit transition hover:scale-105 mt-2' onClick={googlePlayClick}>
                             <Image alt='Google_PLay' src={'/images/googlePlayButton.png'} width={250} height={100}/>
                         </button>
                     </div>
-                    <div className='flex flex-col mt-2.5'>
-                        <Image alt='Apple Scholarly' src={'/images/iPhoneMockUp3.png'} width={200} height={400}/>
-                        <button className='w-fit h-fit transition hover:scale-105 mt-5' onClick={appStoreClick}>
+                    <div className='flex flex-col mt-2.5 items-center'>
+                        <Image alt='Apple Scholarly' src={'/images/iPhoneMockupScreenshotVersion13.png'} width={180} height={350}/>
+                        <button className='w-fit h-fit transition hover:scale-105 mt-7' onClick={appStoreClick}>
                             <Image alt='App-Store' src={AppStoreSVG} width={200} height={50}/>
                         </button>
                     </div>

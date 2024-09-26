@@ -1,6 +1,6 @@
 // import Link from 'next/link'
-import UnderConstruction from "@/components/underConstruction"
-import Image from "next/image"
+// import UnderConstruction from "@/components/underConstruction"
+// import Image from "next/image"
 import Link from "next/link"
 
 export default function Home() {
@@ -24,7 +24,7 @@ export default function Home() {
             <div className="w-screen h-fit mt-24 flex flex-col items-start lg:items-center max-w-2xl px-6">
                 <h3 className="font-semibold text-4xl lg:text-6xl text-emerald-300 text-left lg:text-center">Join our growing team</h3>
                 <h6 className="text-left lg:text-center font-extralight text-xl lg:text-2xl mt-8">Help us create a better future for all students.</h6>
-                <h6 className="text-left lg:text-center font-extralight text-xl lg:text-2xl mt-3">We are dedicated to the student-helping-student motto and will happily bring students into our team.</h6>
+                <h6 className="text-left lg:text-center font-extralight text-xl lg:text-2xl mt-3">We are dedicated to the students-helping-students motto and will happily bring students into our team.</h6>
                 <Link href={'/go/team'} className="mt-12 py-2 px-5 text-2xl text-center self-center rounded-md bg-gradient-to-br from-indigo-500 from-15% via-sky-500 via-40% to-emerald-500 transition-all hover:scale-105">Learn how</Link>
             </div>
         </div>
