@@ -2,7 +2,7 @@
 import Image from "next/image"
 import { useState } from "react"
 
-export default function pigeon(){
+export default function Pigeon(){
     const [pressed, setPressed] = useState(false);
 
     return(
