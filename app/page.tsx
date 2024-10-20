@@ -42,7 +42,7 @@ export default function Home() {
     }
 
     const googlePlayClick = ()=>{
-        alert("Scholarly is still in beta. Check back in later")
+        alert("Scholarly is still in closed beta on Android. Scholarly on iOS is currently in open beta.")
     }
 
     const appStoreClick = ()=>{
@@ -184,9 +184,9 @@ export default function Home() {
                     </div>
                     <div className='flex flex-col mt-2.5 items-center'>
                         <Image alt='Apple Scholarly' src={'/images/iPhoneMockupScreenshotVersion13.png'} width={180} height={350}/>
-                        <button className='w-fit h-fit transition hover:scale-105 mt-7' onClick={appStoreClick}>
+                        <a className='w-fit h-fit transition hover:scale-105 mt-7' href='https://testflight.apple.com/join/2aRTGOqk'>
                             <Image alt='App-Store' src={AppStoreSVG} width={200} height={50}/>
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>
