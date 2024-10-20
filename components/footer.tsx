@@ -11,7 +11,7 @@ export function Footer(){
     }
 
     const googlePlayClick = ()=>{
-        alert("Scholarly is still in beta. Check back in later")
+        alert("Scholarly is still in beta on Android. Scholarly on iOS is currently in open beta.")
     }
 
     return(
@@ -41,9 +41,9 @@ export function Footer(){
                         <button className='w-fit h-fit transition hover:scale-105' onClick={googlePlayClick}>
                             <Image alt='Google_PLay' src={'/images/googlePlayButton.png'} width={125} height={0}/>
                         </button>
-                        <button className='w-fit h-fit transition hover:scale-105' onClick={appStoreClick}>
+                        <a className='w-fit h-fit transition hover:scale-105' href="https://testflight.apple.com/join/2aRTGOqk">
                             <Image alt='App-Store' src={AppStoreSVG} width={100} height={0}/>
-                        </button>
+                        </a>
                     </div>
                 </div>
                 <div id="where to go" className="w-screen justify-center items-start flex flex-row max-w-xl gap-x-10">
