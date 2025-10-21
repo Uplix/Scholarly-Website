@@ -1,0 +1,158 @@
+'use client'
+import { auth, db } from "@/firebase/config";
+import { onValue, ref, set } from "firebase/database";
+import { signOut } from "firebase/auth";
+import { signOut as fullSignOut }  from "next-auth/react";
+import Avatar from "@mui/material/Avatar";
+import PersonIcon from '@mui/icons-material/Person';
+import CloseIcon from '@mui/icons-material/Close'
+import * as React from 'react'
+import Modal from "@mui/material/Modal";
+import Rating from '@mui/material/Rating'
+import { CircularProgress, Backdrop } from "@mui/material";
+import { useRouter } from "next/navigation";
+
+export default function Settings({params}:{params:{district:string}}){
+    const [fetching, setFetching] = React.useState(true);
+    const [reload, setReload] = React.useState(0);
+    const [sure, setSure] = React.useState<suresees|null>(null)
+    const [modalClassName, setModalClassName] = React.useState('bg-[#1e1e1e] items-center w-96 h-fit flex flex-col animate-jump-in animate-ease-in rounded-2xl');
+    const [isTutor, setIsTutor] = React.useState(false);
+    const [rating, setRating] = React.useState({
+        numRatings:0,
+        rating:0
+    });
+    const [user, setUser] = React.useState<any>({});
+    const [loading, setLoading] = React.useState(false)
+    const router = useRouter();
+
+    interface suresees{
+        state:string|null,
+        click:()=>Promise<void>|null,
+        text:string|null,
+        fix:boolean
+    }
+
+    React.useEffect(()=>{
+        let isATutor = false;
+        let theUser:any = {};
+        if(auth.currentUser != undefined && auth.currentUser != null){
+            onValue(ref(db, params.district + '/users/' + auth.currentUser?.uid + '/isTutor'), (snapshot)=>{
+                if(snapshot.exists() && snapshot.val() === true){
+                    isATutor = snapshot.val();
+                }
+            })
+            let theRating = 0;
+            let numRatings = 0;
+            onValue(ref(db, params.district + '/users/' + auth.currentUser?.uid + '/ratings'), (snapshot)=>{
+                snapshot.forEach((child)=>{
+                    theRating += child.val();
+                    numRatings++;
+                })
+            })
+            onValue(ref(db, params.district + '/users/' + auth.currentUser?.uid + '/school'), (snapshot)=>{
+                theUser.school = snapshot.val();
+            })
+            onValue(ref(db, params.district + '/users/' + auth.currentUser?.uid + '/grade'), (snapshot)=>{
+                theUser.grade = snapshot.val();
+            })
+            setRating({
+                numRatings:numRatings,
+                rating:theRating
+            })
+            setIsTutor(isATutor)
+            setUser(theUser);
+            // console.log(theRating, numRatings)
+            // console.log(isTutor);
+        }
+    }, [reload])
+
+    React.useEffect(()=>{
+        setTimeout(()=>{
+            setReload(reload+1);
+        }, 1000)
+        setTimeout(()=>{
+            setFetching(false);
+        }, 1500)
+    }, [])
+
+    if(fetching)return(
+        <div className="flex flex-col justify-center items-center w-full h-full">
+            <CircularProgress size={100} thickness={2}/>
+        </div>
+    )
+    if(auth.currentUser == undefined ||auth.currentUser == null){
+        router.push('/')
+    }
+    
+    // const signingOut = async () =>{
+    //     setLoading(true)
+    //     await signOut(auth);
+    //     // setReload(reload+1);
+    //     await fullSignOut();
+    //     // closeModal();
+    //     router.push('/login');
+    // }
+
+    // change to request deletion from staff
+    // const deleteAccount = async ()=>{
+    //     await signingOut();
+    //     closeModal();
+    // }
+
+    // const closeModal = ()=>{
+    //     setModalClassName('bg-[#1e1e1e] items-center w-96 h-fit flex flex-col animate-jump-out animate-ease-out rounded-2xl')
+    //     setTimeout(()=>{
+    //         setSure(null)
+    //         setModalClassName('bg-[#1e1e1e] items-center w-96 h-fit flex flex-col animate-jump-in animate-ease-in rounded-2xl')
+    //     }, 500)
+    // }
+
+    return(
+        <div className="flex flex-col w-full h-fit items-center pt-10 pb-10">
+            <title>Scholarly: Settings</title>
+            <div className="rounded-full w-fit h-fit animate-jump-in animate-ease-in">
+                {(auth.currentUser == null || auth.currentUser == undefined)? <PersonIcon fontSize='large'/>:<Avatar sx={{width:70, height:70}} alt={"Profile Image"} src={auth.currentUser.photoURL}/>}
+            </div>
+            <text className="text-slate-50 text-5xl text-center w-fit h-fit mt-8 mb-10 animate-jump-in animate-ease-in">Hi{" "+auth.currentUser?.displayName?.split(' ')[0] + " 👋"}</text>
+            <div className="flex flex-col w-fit h-fit items-start px-5 animate-jump-in animate-ease-in">
+                <ListItem display={'Full name: ' + auth.currentUser?.displayName}/>
+                <ListItem display={"Email: "+auth.currentUser?.email}/>
+                <ListItem display={"User ID: " + auth.currentUser?.uid}/>
+                <ListItem display={'School District: MHUSD'}/>
+                <ListItem display={"School: " + user?.school}/>
+                <ListItem display={"Grade: " + user?.grade}/>
+                <ListItem display={'Currently a tutor: ' + (isTutor?'Yes':'No')}/>
+                <ListItem display={'You have ' + rating.numRatings + ((rating.numRatings == 1)? ' rating':' ratings')}/>
+            </div>
+            <div className="mt-10 animate-jump-in animate-ease-in">
+                <Rating sx={{fontSize:65}} defaultValue={(rating.numRatings == 0)?0:rating.rating/rating.numRatings} precision={0.1} readOnly/>
+            </div>            
+            {/* <button onClick={()=>setSure({text:"Are you sure you want to sign out?", click:signingOut, fix:true, state:'open'})} className="text-center p-3 items-center font-light rounded-2xl text-3xl mt-12 bg-gradient-to-br from-rose-700 to-red-500 w-fit h-fit transition hover:scale-110 hover:-translate-y-2 hover:opacity-80">Sign Out</button> */}
+            {/* <button onClick={()=>setSure({text:"Are you sure you want to delete your account?", click:deleteAccount, fix:false, state:'open'})} className="text-center p-3 items-center font-light rounded-2xl text-3xl mt-12 bg-gradient-to-br from-rose-700 to-red-500 w-fit h-fit transition hover:scale-110 hover:-translate-y-2 hover:opacity-80">Delete Account</button>
+            {(sure!=null)?<Modal open onClose={closeModal}>
+                <div className="flex w-full h-full justify-center items-center">
+                    <div className={modalClassName}>
+                        <text className="text-center text-4xl space-x-9 mt-12 px-6">{sure?.text}</text>
+                        {sure?.fix?null:<text className="text-red-600 font-bold text-3xl text-center mt-8 px-4 ">This action cannot be undone</text>}
+                        <button onClick={sure?.click} className="text-center p-3 items-center font-light rounded-2xl text-5xl mt-12 mb-8 bg-gradient-to-br from-rose-700 to-red-500 w-fit h-fit transition hover:scale-110 hover:-translate-y-2 hover:opacity-80">Confirm</button>
+                        <button onClick={closeModal} className='absolute right-4 top-4 transition hover:scale-110 hover:-translate-y-1'><CloseIcon fontSize='large'/></button>
+                    </div>
+                </div>
+            </Modal>:null} */}
+            {loading?<Backdrop open={loading}>
+                <CircularProgress size={120} thickness={1.5}/>
+            </Backdrop>:null}
+        </div>
+    )
+}
+
+const ListItem = ({display}:{display:string|null|undefined}) =>{
+    return(
+        <div className="flex flex-row w-fit h-fit items-center mt-3.5">
+            <text className="text-center text-slate-300 text-4xl ml-3">-</text>
+            <div className="w-6"/>
+            <text className="text-center text-slate-100 text-2xl">{display}</text>
+        </div>
+    )
+}
